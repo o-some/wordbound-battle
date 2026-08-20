@@ -3,10 +3,12 @@ name: Deploy Wordbound Battle to GitHub Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'docs/LIVE_STATUS.json'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -49,7 +51,112 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-live:
+    runs-on: ubuntu-latest
+    needs: deploy
+    env:
+      PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Wait for live page and verify HTTP 200
+        shell: bash
+        run: |
+          set -euo pipefail
+          page_url="${PAGE_URL:-https://o-some.github.io/wordbound-battle/}"
+          echo "Verifying $page_url"
+          ok=0
+          for attempt in $(seq 1 18); do
+            code=$(curl -L -sS -o /tmp/wordbound-page.html -w '%{http_code}' "$page_url" || true)
+            echo "Attempt $attempt -> HTTP $code"
+            if [ "$code" = "200" ] && grep -qi "Wordbound Battle" /tmp/wordbound-page.html; then
+              ok=1
+              break
+            fi
+            sleep 10
+          done
+          test "$ok" = "1"
+          cp /tmp/wordbound-page.html /tmp/wordbound-page-reload.html
+          code_reload=$(curl -L -sS -o /tmp/wordbound-page-reload.html -w '%{http_code}' "$page_url")
+          test "$code_reload" = "200"
+
+      - name: Verify live asset URLs do not return 404
+        shell: bash
+        run: |
+          set -euo pipefail
+          page_url="${PAGE_URL:-https://o-some.github.io/wordbound-battle/}"
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin
+
+          class P(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.urls=[]
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  for key in ('src','href'):
+                      value=d.get(key)
+                      if value and not value.startswith(('data:','mailto:','tel:','#','javascript:')):
+                          self.urls.append(value)
+
+          html=open('/tmp/wordbound-page.html', encoding='utf-8').read()
+          p=P(); p.feed(html)
+          base='https://o-some.github.io/wordbound-battle/'
+          urls=[]
+          for value in p.urls:
+              full=urljoin(base, value)
+              if full.startswith('https://o-some.github.io/wordbound-battle/'):
+                  urls.append(full)
+          with open('/tmp/live-assets.txt','w', encoding='utf-8') as f:
+              for u in sorted(set(urls)):
+                  f.write(u+'\n')
+          print(f'Found {len(set(urls))} same-origin assets')
+          PY
+          while IFS= read -r asset; do
+            [ -n "$asset" ] || continue
+            code=$(curl -L -sS -o /dev/null -w '%{http_code}' "$asset" || true)
+            echo "$code $asset"
+            if [ "$code" = "404" ] || [ "$code" = "000" ]; then
+              exit 1
+            fi
+          done < /tmp/live-assets.txt
+
+      - name: Record successful live verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          page_url="${PAGE_URL:-https://o-some.github.io/wordbound-battle/}"
+          mkdir -p docs
+          cat > docs/LIVE_STATUS.json <<EOF
+          {
+            "status": "PASS",
+            "tested_commit": "${GITHUB_SHA}",
+            "pages_url": "${page_url}",
+            "verified_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "checks": {
+              "build_job": "PASS",
+              "npm_install": "PASS",
+              "engine_tests": "PASS",
+              "astro_build": "PASS",
+              "pages_deploy": "PASS",
+              "live_http_200": "PASS",
+              "reload_http_200": "PASS",
+              "same_origin_assets_no_404": "PASS"
+            }
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/LIVE_STATUS.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record successful live deployment [skip ci]"
+          git push origin HEAD:main
