@@ -1,16 +1,9 @@
 {
-  "status": "PASS",
-  "tested_commit": "8e97933364cea12a5750be7bbe2174819477a360",
-  "pages_url": "https://o-some.github.io/wordbound-battle/",
-  "verified_at_utc": "2026-08-20T07:45:30Z",
-  "checks": {
-    "build_job": "PASS",
-    "npm_install": "PASS",
-    "engine_tests": "PASS",
-    "astro_build": "PASS",
-    "pages_deploy": "PASS",
-    "live_http_200": "PASS",
-    "reload_http_200": "PASS",
-    "same_origin_assets_no_404": "PASS"
-  }
+  "status": "FAIL",
+  "tested_commit": "ab83c1cd74d7bac659f105ba60bb5054ce76728a",
+  "verified_at_utc": "2026-08-20T07:59:23Z",
+  "run_url": "https://github.com/o-some/wordbound-battle/actions/runs/32346455153",
+  "build_result": "failure",
+  "deploy_result": "skipped",
+  "verify_live_result": "skipped"
 }
