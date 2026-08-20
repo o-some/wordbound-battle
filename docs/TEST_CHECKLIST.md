@@ -13,6 +13,7 @@ Stand während Migration. Nur tatsächlich ausgeführte Tests werden abgehakt.
 - [ ] `npm run build:astro`
 - [ ] GitHub Actions grün
 - [ ] Pages-Artifact erfolgreich
+- [x] GitHub Pages Source auf **GitHub Actions** gesetzt (vom Nutzer bestätigt, 20.08.2026)
 
 ## Allgemein Live
 - [ ] Startseite HTTP 200
