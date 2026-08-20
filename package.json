@@ -12,13 +12,15 @@
     "build:astro": "astro build",
     "preview:astro": "astro preview --host 0.0.0.0",
     "test": "node --test src/game/engine.test.mjs",
+    "test:e2e": "node scripts/e2e.mjs",
     "standalone": "node scripts/make-standalone.mjs",
     "audit:structure": "node scripts/audit-structure.mjs",
     "verify:core": "npm run test && npm run standalone && npm run audit:structure"
   },
   "devDependencies": {
-    "vite": "^8.2.1",
-    "astro": "^7.2.2"
+    "astro": "^7.2.2",
+    "playwright": "^1.55.0",
+    "vite": "^8.2.1"
   },
   "engines": {
     "node": ">=22.12.0"
