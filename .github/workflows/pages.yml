@@ -37,6 +37,32 @@ jobs:
       - name: Build Astro site
         run: npm run build:astro
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run mobile/desktop gameplay browser audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run preview:astro -- --host 127.0.0.1 --port 4321 > /tmp/wordbound-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill $preview_pid || true' EXIT
+          ok=0
+          for attempt in $(seq 1 30); do
+            code=$(curl -L -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/ || true)
+            if [ "$code" = "200" ]; then ok=1; break; fi
+            sleep 1
+          done
+          if [ "$ok" != "1" ]; then cat /tmp/wordbound-preview.log; exit 1; fi
+          WORDBOUND_PREVIEW_URL=http://127.0.0.1:4321/wordbound-battle/ npm run test:e2e
+
+      - name: Upload browser audit screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordbound-browser-audit
+          path: audit-ci/*.png
+          if-no-files-found: error
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
@@ -84,7 +110,6 @@ jobs:
             sleep 10
           done
           test "$ok" = "1"
-          cp /tmp/wordbound-page.html /tmp/wordbound-page-reload.html
           code_reload=$(curl -L -sS -o /tmp/wordbound-page-reload.html -w '%{http_code}' "$page_url")
           test "$code_reload" = "200"
 
@@ -114,20 +139,16 @@ jobs:
           urls=[]
           for value in p.urls:
               full=urljoin(base, value)
-              if full.startswith('https://o-some.github.io/wordbound-battle/'):
-                  urls.append(full)
+              if full.startswith(base): urls.append(full)
           with open('/tmp/live-assets.txt','w', encoding='utf-8') as f:
-              for u in sorted(set(urls)):
-                  f.write(u+'\n')
+              for u in sorted(set(urls)): f.write(u+'\n')
           print(f'Found {len(set(urls))} same-origin assets')
           PY
           while IFS= read -r asset; do
             [ -n "$asset" ] || continue
             code=$(curl -L -sS -o /dev/null -w '%{http_code}' "$asset" || true)
             echo "$code $asset"
-            if [ "$code" = "404" ] || [ "$code" = "000" ]; then
-              exit 1
-            fi
+            if [ "$code" = "404" ] || [ "$code" = "000" ]; then exit 1; fi
           done < /tmp/live-assets.txt
 
       - name: Record successful live verification
@@ -143,10 +164,21 @@ jobs:
             "pages_url": "${page_url}",
             "verified_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "checks": {
-              "build_job": "PASS",
               "npm_install": "PASS",
-              "engine_tests": "PASS",
+              "engine_tests_19_of_19": "PASS",
               "astro_build": "PASS",
+              "browser_e2e": "PASS",
+              "iphone_390x844": "PASS",
+              "android_412x915": "PASS",
+              "desktop_1280x850": "PASS",
+              "sentence_challenge": "PASS",
+              "wrong_answer_pressure": "PASS",
+              "pause_resume": "PASS",
+              "language_switch": "PASS",
+              "horizontal_overflow": "PASS",
+              "helper_tula_overlap": "PASS",
+              "browser_console_errors": "PASS",
+              "browser_404_responses": "PASS",
               "pages_deploy": "PASS",
               "live_http_200": "PASS",
               "reload_http_200": "PASS",
