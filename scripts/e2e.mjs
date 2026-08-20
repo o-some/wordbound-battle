@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium, webkit } from "playwright";
 import fs from "node:fs/promises";
 
 const baseUrl = process.env.WORDBOUND_PREVIEW_URL || "http://127.0.0.1:4321/wordbound-battle/";
@@ -176,14 +176,22 @@ async function runCorrectSentenceScenario(browser) {
   return { correctSentence: "PASS" };
 }
 
-const browser = await chromium.launch({ headless: true });
+const results = [];
+const chromiumBrowser = await chromium.launch({ headless: true });
 try {
-  const results = [];
-  results.push(await runScenario(browser, { width: 390, height: 844, label: "iphone-390x844", isMobile: true }));
-  results.push(await runScenario(browser, { width: 412, height: 915, label: "android-412x915", isMobile: true }));
-  results.push(await runScenario(browser, { width: 1280, height: 850, label: "desktop-1280x850", isMobile: false }));
-  results.push(await runCorrectSentenceScenario(browser));
-  console.log(JSON.stringify({ status: "PASS", baseUrl, results }, null, 2));
+  results.push(await runScenario(chromiumBrowser, { width: 390, height: 844, label: "iphone-chromium-390x844", isMobile: true }));
+  results.push(await runScenario(chromiumBrowser, { width: 412, height: 915, label: "android-chromium-412x915", isMobile: true }));
+  results.push(await runScenario(chromiumBrowser, { width: 1280, height: 850, label: "desktop-chromium-1280x850", isMobile: false }));
+  results.push(await runCorrectSentenceScenario(chromiumBrowser));
 } finally {
-  await browser.close();
+  await chromiumBrowser.close();
 }
+
+const webkitBrowser = await webkit.launch({ headless: true });
+try {
+  results.push(await runScenario(webkitBrowser, { width: 390, height: 844, label: "iphone-webkit-390x844", isMobile: true }));
+} finally {
+  await webkitBrowser.close();
+}
+
+console.log(JSON.stringify({ status: "PASS", baseUrl, results }, null, 2));
