@@ -44,11 +44,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run preview:astro -- --host 127.0.0.1 --port 4321 > /tmp/wordbound-preview.log 2>&1 &
+          npx astro preview --host 127.0.0.1 --port 4321 > /tmp/wordbound-preview.log 2>&1 &
           preview_pid=$!
           trap 'kill $preview_pid || true' EXIT
           ok=0
-          for attempt in $(seq 1 30); do
+          for attempt in $(seq 1 60); do
             code=$(curl -L -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/ || true)
             if [ "$code" = "200" ]; then ok=1; break; fi
             sleep 1
