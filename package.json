@@ -1,0 +1,27 @@
+{
+  "name": "wordbound-battle",
+  "version": "1.0.0-migrated",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "npm run test && npm run build:vite && npm run build:astro && npm run standalone && npm run audit:structure",
+    "preview": "vite preview --host 0.0.0.0",
+    "build:vite": "vite build",
+    "dev:astro": "astro dev --host 0.0.0.0",
+    "build:astro": "astro build",
+    "preview:astro": "astro preview --host 0.0.0.0",
+    "test": "node --test src/game/engine.test.mjs",
+    "standalone": "node scripts/make-standalone.mjs",
+    "audit:structure": "node scripts/audit-structure.mjs",
+    "verify:core": "npm run test && npm run standalone && npm run audit:structure"
+  },
+  "devDependencies": {
+    "vite": "^8.2.1",
+    "astro": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "description": "Tula's Island Wordbound Battle – rundenbasiertes Sprachlern-RPG"
+}

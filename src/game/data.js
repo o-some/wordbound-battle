@@ -1,0 +1,283 @@
+export const TULA_ASSET = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNzYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+Cjx0aXRsZSBpZD0idGl0bGUiPlR1bGEgQW5pbWUtTWFza290dGNoZW48L3RpdGxlPjxkZXNjIGlkPSJkZXNjIj5GcsO2aGxpY2hlIGdyw7xuZSBTY2hpbGRrcsO2dGUgbWl0IFN0cm9oaHV0IHVuZCBSdWNrc2FjazwvZGVzYz4KPGRlZnM+CiA8bGluZWFyR3JhZGllbnQgaWQ9InNraW4iIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjYzlmNDZhIi8+PHN0b3Agb2Zmc2V0PSIuNSIgc3RvcC1jb2xvcj0iIzc0Yzc0ZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJkN2Y1MiIvPjwvbGluZWFyR3JhZGllbnQ+CiA8bGluZWFyR3JhZGllbnQgaWQ9InNoZWxsIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzM4NmY1YyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzE1M2Y0MiIvPjwvbGluZWFyR3JhZGllbnQ+CiA8bGluZWFyR3JhZGllbnQgaWQ9ImJlbGx5IiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmZTdhNiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q3YTg0ZiIvPjwvbGluZWFyR3JhZGllbnQ+CiA8bGluZWFyR3JhZGllbnQgaWQ9ImhhdCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU1OTYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjODg3MmQiLz48L2xpbmVhckdyYWRpZW50PgogPHJhZGlhbEdyYWRpZW50IGlkPSJleWUiIGN4PSI0NSUiIGN5PSIzNSUiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmYiLz48c3RvcCBvZmZzZXQ9Ii4xMiIgc3RvcC1jb2xvcj0iI2ZmZiIvPjxzdG9wIG9mZnNldD0iLjEzIiBzdG9wLWNvbG9yPSIjOWE2MTFmIi8+PHN0b3Agb2Zmc2V0PSIuNTUiIHN0b3AtY29sb3I9IiM0NzI4MGYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwYjE1MjAiLz48L3JhZGlhbEdyYWRpZW50PgogPGZpbHRlciBpZD0ic2hhZG93Ij48ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMjAiIHN0ZERldmlhdGlvbj0iMTgiIGZsb29kLWNvbG9yPSIjMDAyYjQ2IiBmbG9vZC1vcGFjaXR5PSIuMyIvPjwvZmlsdGVyPgogPGZpbHRlciBpZD0iZ2xvdyI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iOCIgcmVzdWx0PSJiIi8+PGZlTWVyZ2U+PGZlTWVyZ2VOb2RlIGluPSJiIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPgo8L2RlZnM+CjxlbGxpcHNlIGN4PSIzMjMiIGN5PSI3MDQiIHJ4PSIxOTAiIHJ5PSIzNSIgZmlsbD0iIzAwMmM0NiIgb3BhY2l0eT0iLjE4Ii8+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KIDxwYXRoIGQ9Ik0xODAgMzQ0Yy02Ni00LTEwNSAyOS0xMTQgODktNyA1MCA4IDExMCA1MyAxMjYgNDEgMTUgNzQtMTAgODQtNTkgMTItNTcgMjUtOTggNTItMTM0eiIgZmlsbD0idXJsKCNza2luKSIvPgogPHBhdGggZD0iTTExNyAzNjVjLTM3LTU2LTMxLTExMy00LTE0MiAxMS0xMiAyNy00IDI1IDE0LTIgMjMgNSA0MyAxOCA1NiA3LTQ1IDMzLTg0IDU0LTgxIDE1IDIgMTUgMjAgNCAzNC0xOCAyMy0yNCA1MS0xNyA3OCAxNC0zMSAzNS00OSA1MC00MSAxMyA3IDUgMjctNyA0MS0xOCAyMS0zMCA1MC0zMyA3OHoiIGZpbGw9InVybCgjc2tpbikiLz4KIDxwYXRoIGQ9Ik0xNzkgNDc0Yy0xNC0xMDMgMzEtMjA4IDEzNS0yNTMgODgtMzkgMTkzLTE4IDI1MCA1NCA2MyA3OCA2NyAxOTQgMTMgMjg2LTQ5IDgyLTE0MiAxMjktMjQwIDExNy05OC0xMi0xNDUtOTEtMTU4LTIwNHoiIGZpbGw9InVybCgjc2tpbikiLz4KIDxwYXRoIGQ9Ik0zOTkgMjU3Yzg4IDQgMTU3IDYyIDE3MCAxNDUgMTUgOTYtMzggMTkwLTEyNyAyMjYtOC04NC0xNy0yMDktNDMtMzcxeiIgZmlsbD0idXJsKCNzaGVsbCkiLz4KIDxwYXRoIGQ9Ik00MzggMjg3bDU2IDQ1LTE4IDcwLTY3IDIzLTU1LTQ5IDE4LTY5ek00OTQgNDE5bDU4IDM3LTI2IDY3LTcxIDktNDMtNTYgMzAtNjB6TTM3MiA0MzZsNjYtMTEgMzggNTctMzQgNjUtNzEtMi0zNC02MXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZiYjU3YiIgc3Ryb2tlLXdpZHRoPSIxMiIgb3BhY2l0eT0iLjkiLz4KIDxwYXRoIGQ9Ik0yNjcgMzk5YzE4LTcwIDcwLTExMiAxMjYtMTA2IDU1IDYgOTQgNTYgMTAyIDEyNSA3IDY1LTUgMTU3LTM1IDIwNy0yOCA0Ny0xMDUgNjAtMTQ1IDE3LTQ0LTQ3LTcwLTE2Mi00OC0yNDN6IiBmaWxsPSJ1cmwoI2JlbGx5KSIgc3Ryb2tlPSIjYjg4MzM3IiBzdHJva2Utd2lkdGg9IjciLz4KIDxwYXRoIGQ9Ik0yODggNDU1aDE4NE0yNzggNTE1aDE5NU0yOTggNTc5aDE1OSIgc3Ryb2tlPSIjYmY4YjQzIiBzdHJva2Utd2lkdGg9IjUiIG9wYWNpdHk9Ii42NSIvPgogPGVsbGlwc2UgY3g9IjI3NyIgY3k9IjY2OSIgcng9IjcyIiByeT0iNDgiIGZpbGw9InVybCgjc2tpbikiLz48ZWxsaXBzZSBjeD0iNDcwIiBjeT0iNjY2IiByeD0iNzIiIHJ5PSI0OCIgZmlsbD0idXJsKCNza2luKSIvPgogPHBhdGggZD0iTTIyOCA2NThjMTQtMTYgMzEtMTkgNTEtNU00MTIgNjUzYzIxLTEzIDQyLTEwIDU3IDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2RmZjk5NSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KIDxwYXRoIGQ9Ik0xOTAgMjYzYzE0LTc5IDgzLTEzNyAxNjktMTM3IDkyIDAgMTY1IDY3IDE3MCAxNTggNCA3Mi0zMiAxMzItOTEgMTU4LTcwIDMxLTE2MSAxMC0yMDctNDctMzAtMzctNDktODItNDEtMTMyeiIgZmlsbD0idXJsKCNza2luKSIvPgogPGVsbGlwc2UgY3g9IjI4OSIgY3k9IjI4MiIgcng9IjU0IiByeT0iNzAiIGZpbGw9InVybCgjZXllKSIvPjxlbGxpcHNlIGN4PSI0MTYiIGN5PSIyODIiIHJ4PSI1NCIgcnk9IjcwIiBmaWxsPSJ1cmwoI2V5ZSkiLz4KIDxlbGxpcHNlIGN4PSIyNjkiIGN5PSIyNTUiIHJ4PSIxNiIgcnk9IjI0IiBmaWxsPSIjZmZmIi8+PGVsbGlwc2UgY3g9IjM5NiIgY3k9IjI1NSIgcng9IjE2IiByeT0iMjQiIGZpbGw9IiNmZmYiLz4KIDxjaXJjbGUgY3g9IjMwMiIgY3k9IjMwOCIgcj0iOCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgiLz48Y2lyY2xlIGN4PSI0MjkiIGN5PSIzMDgiIHI9IjgiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44Ii8+CiA8cGF0aCBkPSJNMzAzIDM1OWMzMSAyOCA3NCAyOSAxMDcgMC00IDQ4LTI5IDc1LTU0IDc1LTI3IDAtNTAtMjgtNTMtNzV6IiBmaWxsPSIjN2QyYTJjIiBzdHJva2U9IiM1NjMwMmEiIHN0cm9rZS13aWR0aD0iNSIvPgogPHBhdGggZD0iTTMxOSAzOTljMjUtMTkgNTItMTkgNzYgMC0yMCAyMS01NyAyMi03NiAweiIgZmlsbD0iI2ZmODU4OCIvPgogPGVsbGlwc2UgY3g9IjIyOSIgY3k9IjM0NCIgcng9IjI2IiByeT0iMTQiIGZpbGw9IiNmZjliODQiIG9wYWNpdHk9Ii41NSIvPjxlbGxpcHNlIGN4PSI0NzYiIGN5PSIzNDQiIHJ4PSIyNiIgcnk9IjE0IiBmaWxsPSIjZmY5Yjg0IiBvcGFjaXR5PSIuNTUiLz4KIDxwYXRoIGQ9Ik0yNzAgMjA1YzIwLTE4IDQ1LTI1IDcxLTIyTTM4NyAxODRjMjgtNCA1NCA2IDcxIDI3IiBzdHJva2U9IiMyZjcwNDciIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTE2MSAxODdjNTUtOTUgMjU3LTEyNSAzODItMjEgMjYgMjIgMjIgNDQtNyA0OC0xMjYgMTgtMjQzIDE2LTM1MyAwLTI5LTQtMzYtMTEtMjItMjd6IiBmaWxsPSJ1cmwoI2hhdCkiIHN0cm9rZT0iI2FhNmUyMyIgc3Ryb2tlLXdpZHRoPSI3Ii8+CiA8cGF0aCBkPSJNMjUwIDEwNmM0NS01MiAxNTQtNjIgMjI0LTExIDI5IDIxIDQ1IDU0IDQ2IDg4LTkyLTIxLTIwMy0yMS0yOTcgMCAwLTI5IDktNTUgMjctNzd6IiBmaWxsPSJ1cmwoI2hhdCkiIHN0cm9rZT0iI2FhNmUyMyIgc3Ryb2tlLXdpZHRoPSI3Ii8+CiA8cGF0aCBkPSJNMjIzIDE3NGM5NS0yNCAyMDEtMjMgMjk4IDAiIHN0cm9rZT0iIzBjNWM5MCIgc3Ryb2tlLXdpZHRoPSIyMCIvPgogPHBhdGggZD0iTTIzNiAxMzljLTI4LTI5LTQyLTUyLTI0LTY1IDE3LTEyIDM1IDkgNDkgMzAgNC0zMSAxNC01NCAzNC01MSAxOCAzIDE3IDMxIDEyIDU3IDIyLTIwIDQzLTMxIDU2LTE2IDE0IDE2LTcgNDAtMzAgNTUtMjktNy02NC0xMC05Ny0xMHoiIGZpbGw9IiNmZmY1ZDYiIHN0cm9rZT0iI2UzYjg1ZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+CiA8cGF0aCBkPSJNMzA2IDQ2NmMtMjEgMTctMzggNDMtNDkgNzMiIHN0cm9rZT0iIzBmNWY4YyIgc3Ryb2tlLXdpZHRoPSIyNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTQ0NCA0NTNjMjYgMTggNDUgNDUgNTUgNzciIHN0cm9rZT0iIzBmNWY4YyIgc3Ryb2tlLXdpZHRoPSIyNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8Y2lyY2xlIGN4PSIzNzUiIGN5PSI0NjEiIHI9IjMyIiBmaWxsPSIjNTZkOGYwIiBzdHJva2U9IiMwZjVmOGMiIHN0cm9rZS13aWR0aD0iOCIgZmlsdGVyPSJ1cmwoI2dsb3cpIi8+PHBhdGggZD0iTTM3NCA0NDVjLTE4IDE0LTE3IDMxIDAgMzYgMTggNSAyOC0xMSAxNi0yMS0xMS05LTI0LTMtMjIgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KIDxjaXJjbGUgY3g9IjIyOSIgY3k9IjMxNyIgcj0iOCIgZmlsbD0iIzJhODE0ZiIvPjxjaXJjbGUgY3g9IjQ3MCIgY3k9IjMxMCIgcj0iNyIgZmlsbD0iIzJhODE0ZiIvPjxjaXJjbGUgY3g9IjIxMCIgY3k9IjI3OSIgcj0iNiIgZmlsbD0iIzJhODE0ZiIvPjxjaXJjbGUgY3g9IjQ5MyIgY3k9IjI3NSIgcj0iNiIgZmlsbD0iIzJhODE0ZiIvPgo8L2c+CjxnIGZpbGw9IiNmZmY2YjciIGZpbHRlcj0idXJsKCNnbG93KSI+PGNpcmNsZSBjeD0iOTYiIGN5PSIxNTEiIHI9IjUiLz48Y2lyY2xlIGN4PSI1NjIiIGN5PSIxMzAiIHI9IjYiLz48Y2lyY2xlIGN4PSI1NTUiIGN5PSI1ODgiIHI9IjUiLz48cGF0aCBkPSJNODMgMjU5bDYgMTQgMTQgNi0xNCA2LTYgMTQtNi0xNC0xNC02IDE0LTZ6Ii8+PHBhdGggZD0iTTU3NSAyNDdsNSAxMSAxMSA1LTExIDUtNSAxMS01LTExLTExLTUgMTEtNXoiLz48L2c+Cjwvc3ZnPgo=';
+
+export const LANGUAGES = {
+  de: { label: "Deutsch", short: "DE", flag: "🇩🇪" },
+  en: { label: "English", short: "EN", flag: "🇬🇧" },
+  es: { label: "Español", short: "ES", flag: "🇪🇸" },
+  el: { label: "Ελληνικά", short: "EL", flag: "🇬🇷" },
+};
+
+export const CATEGORIES = {
+  fruit: { label: "Früchte", icon: "🍓", accent: "#ff9879" },
+  travel: { label: "Reisen", icon: "🧭", accent: "#65d5ff" },
+  nature: { label: "Natur", icon: "🌿", accent: "#89e69e" },
+  home: { label: "Zuhause", icon: "🏡", accent: "#ffd879" },
+};
+
+export const VOCABULARY = [
+  { id: "apple", category: "fruit", de: "Apfel", en: "apple", es: "manzana", el: "μήλο" },
+  { id: "banana", category: "fruit", de: "Banane", en: "banana", es: "plátano", el: "μπανάνα" },
+  { id: "strawberry", category: "fruit", de: "Erdbeere", en: "strawberry", es: "fresa", el: "φράουλα" },
+  { id: "orange", category: "fruit", de: "Orange", en: "orange", es: "naranja", el: "πορτοκάλι" },
+  { id: "lemon", category: "fruit", de: "Zitrone", en: "lemon", es: "limón", el: "λεμόνι" },
+  { id: "grape", category: "fruit", de: "Traube", en: "grape", es: "uva", el: "σταφύλι" },
+  { id: "pear", category: "fruit", de: "Birne", en: "pear", es: "pera", el: "αχλάδι" },
+  { id: "peach", category: "fruit", de: "Pfirsich", en: "peach", es: "melocotón", el: "ροδάκινο" },
+
+  { id: "airport", category: "travel", de: "Flughafen", en: "airport", es: "aeropuerto", el: "αεροδρόμιο" },
+  { id: "ticket", category: "travel", de: "Fahrkarte", en: "ticket", es: "billete", el: "εισιτήριο" },
+  { id: "suitcase", category: "travel", de: "Koffer", en: "suitcase", es: "maleta", el: "βαλίτσα" },
+  { id: "train", category: "travel", de: "Zug", en: "train", es: "tren", el: "τρένο" },
+  { id: "hotel", category: "travel", de: "Hotel", en: "hotel", es: "hotel", el: "ξενοδοχείο" },
+  { id: "map", category: "travel", de: "Karte", en: "map", es: "mapa", el: "χάρτης" },
+  { id: "bus", category: "travel", de: "Bus", en: "bus", es: "autobús", el: "λεωφορείο" },
+  { id: "station", category: "travel", de: "Bahnhof", en: "station", es: "estación", el: "σταθμός" },
+
+  { id: "tree", category: "nature", de: "Baum", en: "tree", es: "árbol", el: "δέντρο" },
+  { id: "flower", category: "nature", de: "Blume", en: "flower", es: "flor", el: "λουλούδι" },
+  { id: "river", category: "nature", de: "Fluss", en: "river", es: "río", el: "ποτάμι" },
+  { id: "mountain", category: "nature", de: "Berg", en: "mountain", es: "montaña", el: "βουνό" },
+  { id: "forest", category: "nature", de: "Wald", en: "forest", es: "bosque", el: "δάσος" },
+  { id: "sun", category: "nature", de: "Sonne", en: "sun", es: "sol", el: "ήλιος" },
+  { id: "sea", category: "nature", de: "Meer", en: "sea", es: "mar", el: "θάλασσα" },
+  { id: "rain", category: "nature", de: "Regen", en: "rain", es: "lluvia", el: "βροχή" },
+
+  { id: "door", category: "home", de: "Tür", en: "door", es: "puerta", el: "πόρτα" },
+  { id: "window", category: "home", de: "Fenster", en: "window", es: "ventana", el: "παράθυρο" },
+  { id: "table", category: "home", de: "Tisch", en: "table", es: "mesa", el: "τραπέζι" },
+  { id: "chair", category: "home", de: "Stuhl", en: "chair", es: "silla", el: "καρέκλα" },
+  { id: "bed", category: "home", de: "Bett", en: "bed", es: "cama", el: "κρεβάτι" },
+  { id: "kitchen", category: "home", de: "Küche", en: "kitchen", es: "cocina", el: "κουζίνα" },
+  { id: "lamp", category: "home", de: "Lampe", en: "lamp", es: "lámpara", el: "λάμπα" },
+  { id: "sofa", category: "home", de: "Sofa", en: "sofa", es: "sofá", el: "καναπές" },
+];
+
+
+export const SENTENCE_CHALLENGES = [
+  {
+    id: "fruit-apple-eat", category: "fruit",
+    de: "Ich esse einen Apfel.",
+    en: "I eat an apple.",
+    es: "Yo como una manzana.",
+    el: "Τρώω ένα μήλο.",
+  },
+  {
+    id: "fruit-banana-yellow", category: "fruit",
+    de: "Die Banane ist gelb.",
+    en: "The banana is yellow.",
+    es: "El plátano es amarillo.",
+    el: "Η μπανάνα είναι κίτρινη.",
+  },
+  {
+    id: "fruit-strawberries-buy", category: "fruit",
+    de: "Wir kaufen frische Erdbeeren.",
+    en: "We buy fresh strawberries.",
+    es: "Compramos fresas frescas.",
+    el: "Αγοράζουμε φρέσκες φράουλες.",
+  },
+  {
+    id: "fruit-lemon-water", category: "fruit",
+    de: "Ich trinke Wasser mit Zitrone.",
+    en: "I drink water with lemon.",
+    es: "Bebo agua con limón.",
+    el: "Πίνω νερό με λεμόνι.",
+  },
+
+  {
+    id: "travel-train", category: "travel",
+    de: "Ich fahre mit dem Zug.",
+    en: "I travel by train.",
+    es: "Viajo en tren.",
+    el: "Ταξιδεύω με το τρένο.",
+  },
+  {
+    id: "travel-airport", category: "travel",
+    de: "Wo ist der Flughafen?",
+    en: "Where is the airport?",
+    es: "¿Dónde está el aeropuerto?",
+    el: "Πού είναι το αεροδρόμιο;",
+  },
+  {
+    id: "travel-station-wait", category: "travel",
+    de: "Wir warten am Bahnhof.",
+    en: "We wait at the station.",
+    es: "Esperamos en la estación.",
+    el: "Περιμένουμε στον σταθμό.",
+  },
+  {
+    id: "travel-suitcase-hotel", category: "travel",
+    de: "Der Koffer ist im Hotel.",
+    en: "The suitcase is in the hotel.",
+    es: "La maleta está en el hotel.",
+    el: "Η βαλίτσα είναι στο ξενοδοχείο.",
+  },
+
+  {
+    id: "nature-sun-sea", category: "nature",
+    de: "Die Sonne scheint über dem Meer.",
+    en: "The sun shines over the sea.",
+    es: "El sol brilla sobre el mar.",
+    el: "Ο ήλιος λάμπει πάνω από τη θάλασσα.",
+  },
+  {
+    id: "nature-tree-forest", category: "nature",
+    de: "Der Baum steht im Wald.",
+    en: "The tree stands in the forest.",
+    es: "El árbol está en el bosque.",
+    el: "Το δέντρο είναι στο δάσος.",
+  },
+  {
+    id: "nature-river-mountain", category: "nature",
+    de: "Der Fluss kommt vom Berg.",
+    en: "The river comes from the mountain.",
+    es: "El río viene de la montaña.",
+    el: "Το ποτάμι έρχεται από το βουνό.",
+  },
+  {
+    id: "nature-rain-flowers", category: "nature",
+    de: "Der Regen hilft den Blumen.",
+    en: "The rain helps the flowers.",
+    es: "La lluvia ayuda a las flores.",
+    el: "Η βροχή βοηθά τα λουλούδια.",
+  },
+
+  {
+    id: "home-open-window", category: "home",
+    de: "Ich öffne das Fenster.",
+    en: "I open the window.",
+    es: "Abro la ventana.",
+    el: "Ανοίγω το παράθυρο.",
+  },
+  {
+    id: "home-table-kitchen", category: "home",
+    de: "Der Tisch steht in der Küche.",
+    en: "The table is in the kitchen.",
+    es: "La mesa está en la cocina.",
+    el: "Το τραπέζι είναι στην κουζίνα.",
+  },
+  {
+    id: "home-lamp-bed", category: "home",
+    de: "Die Lampe steht neben dem Bett.",
+    en: "The lamp is next to the bed.",
+    es: "La lámpara está junto a la cama.",
+    el: "Η λάμπα είναι δίπλα στο κρεβάτι.",
+  },
+  {
+    id: "home-chair-door", category: "home",
+    de: "Der Stuhl steht neben der Tür.",
+    en: "The chair is next to the door.",
+    es: "La silla está junto a la puerta.",
+    el: "Η καρέκλα είναι δίπλα στην πόρτα.",
+  },
+];
+
+export const HELPERS = [
+  {
+    id: "meli",
+    name: "Meli",
+    title: "Fruchtfunke",
+    category: "fruit",
+    maxHp: 54,
+    maxEnergy: 3,
+    attack: 18,
+    skill: "Vitaminblitz",
+    tagline: "stark bei Früchten",
+    avatar: "meli",
+  },
+  {
+    id: "skippi",
+    name: "Skippi",
+    title: "Inselkompass",
+    category: "travel",
+    maxHp: 58,
+    maxEnergy: 3,
+    attack: 17,
+    skill: "Kompassstoß",
+    tagline: "stark bei Reisen",
+    avatar: "skippi",
+  },
+  {
+    id: "neri",
+    name: "Neri",
+    title: "Blattwächter",
+    category: "nature",
+    maxHp: 62,
+    maxEnergy: 3,
+    attack: 16,
+    skill: "Rankenruf",
+    tagline: "stark bei Natur",
+    avatar: "neri",
+  },
+  {
+    id: "fino",
+    name: "Fino",
+    title: "Nestbauer",
+    category: "home",
+    maxHp: 60,
+    maxEnergy: 3,
+    attack: 16,
+    skill: "Heimathieb",
+    tagline: "stark bei Zuhause",
+    avatar: "fino",
+  },
+];
+
+export const ENEMIES = [
+  {
+    id: "coralox",
+    name: "Coralox",
+    subtitle: "Riff-Rüpel",
+    maxHp: 112,
+    attack: 10,
+    level: 3,
+    avatar: "coralox",
+    intro: "Sein Panzer verändert sich im Kampf. Beobachte die Schwäche und wechsle dein Team.",
+    weaknessPhases: [
+      { minHpRatio: 0.67, category: "fruit", name: "Korallenpanzer" },
+      { minHpRatio: 0.34, category: "nature", name: "Moosmantel" },
+      { minHpRatio: 0, category: "travel", name: "Fluchtroute" },
+    ],
+    attacks: [
+      { name: "Riff-Ramme", icon: "🪸", min: 10, max: 14 },
+      { name: "Blasenstoß", icon: "💧", min: 10, max: 13 },
+    ],
+  },
+  {
+    id: "nebulon",
+    name: "Nebulon",
+    subtitle: "Nebel-Manta",
+    maxHp: 136,
+    attack: 11,
+    level: 4,
+    avatar: "nebulon",
+    intro: "Nebulon verschiebt seinen Nebel zwischen Orten, Zuhause und Nahrung.",
+    weaknessPhases: [
+      { minHpRatio: 0.67, category: "travel", name: "Orientierungslos" },
+      { minHpRatio: 0.34, category: "home", name: "Nebelversteck" },
+      { minHpRatio: 0, category: "fruit", name: "Energiehunger" },
+    ],
+    attacks: [
+      { name: "Nebelwelle", icon: "🌫️", min: 12, max: 16 },
+      { name: "Schattenflug", icon: "🌙", min: 11, max: 17 },
+    ],
+  },
+  {
+    id: "sturmkrab",
+    name: "Sturmkrab",
+    subtitle: "Gewitter-Krabbe",
+    maxHp: 160,
+    attack: 12,
+    level: 5,
+    avatar: "sturmkrab",
+    intro: "Ihre Gewitterschale wechselt nach jedem Panzerbruch die Lernschwäche.",
+    weaknessPhases: [
+      { minHpRatio: 0.67, category: "nature", name: "Gewitterschale" },
+      { minHpRatio: 0.34, category: "travel", name: "Sturmjagd" },
+      { minHpRatio: 0, category: "home", name: "Schutzsuche" },
+    ],
+    attacks: [
+      { name: "Donnerklaue", icon: "⚡", min: 14, max: 19 },
+      { name: "Sturmstoß", icon: "🌊", min: 13, max: 18 },
+    ],
+  },
+];

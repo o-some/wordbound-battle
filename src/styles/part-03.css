@@ -1,0 +1,119 @@
+.wordbound-battle .enemy-result-panel{ display:grid; grid-template-columns:58px 1fr; align-items:center; gap:10px; }
+.wordbound-battle .enemy-result-icon{ width:58px; height:58px; border-radius:17px; display:grid; place-items:center; font-size:29px; background:linear-gradient(145deg,rgba(239,145,125,.18),rgba(239,196,102,.09)); border:1px solid rgba(255,255,255,.08); }
+.wordbound-battle .enemy-result-panel .next-turn-btn{ grid-column:1/-1; }
+.wordbound-battle .team-panel{ margin-top:10px; border:1px solid rgba(255,255,255,.08); border-radius:19px; background:rgba(255,255,255,.025); padding:10px; }
+.wordbound-battle .team-panel-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.wordbound-battle .team-panel-head span{ display:block; font-size:8px; color:#71d9cf; font-weight:950; letter-spacing:.14em; }
+.wordbound-battle .team-panel-head b{ display:block; margin-top:2px; color:#fff0c0; font-size:11px; }
+.wordbound-battle .team-panel-head small{ color:rgba(188,238,231,.58); font-size:8px; }
+.wordbound-battle .v2-helper{ position:relative; min-height:91px; padding-bottom:18px; }
+.wordbound-battle .v2-helper.is-match:not(:disabled){ border-color:rgba(136,232,187,.42); background:linear-gradient(145deg,rgba(57,151,120,.18),rgba(255,221,126,.06)); }
+.wordbound-battle .v2-helper.is-match:not(:disabled)::after{ content:"✓"; position:absolute; top:5px; right:5px; width:18px; height:18px; border-radius:999px; display:grid; place-items:center; background:#84e3b5; color:#073344; font-size:10px; font-weight:950; box-shadow:0 4px 12px rgba(83,223,167,.22); }
+.wordbound-battle .v2-helper.is-selected{ transform:translateY(-3px); border-color:rgba(255,221,126,.65); box-shadow:0 12px 26px rgba(0,0,0,.21),0 0 0 2px rgba(239,199,102,.12); }
+.wordbound-battle .v2-helper.is-exhausted{ opacity:.48; filter:saturate(.5); }
+.wordbound-battle .helper-effectiveness{ display:block; margin-top:3px; color:#ffe49a; font-size:7px; font-weight:950; letter-spacing:.07em; }
+.wordbound-battle .v2-helper:not(.is-match) .helper-effectiveness{ color:rgba(203,238,232,.54); }
+.wordbound-battle .helper-energy-row{ position:absolute; left:7px; right:7px; bottom:9px; display:flex; align-items:center; justify-content:space-between; gap:5px; }
+.wordbound-battle .energy-label{ font-size:6px; color:rgba(169,223,216,.5); font-weight:950; letter-spacing:.08em; }
+.wordbound-battle .v2-helper .helper-mini-hp{ bottom:3px; }
+.wordbound-battle .v2-helper:disabled{ cursor:not-allowed; }
+.wordbound-battle .v2-shell.step-question .helper-strip, .wordbound-battle .v2-shell.step-result .helper-strip, .wordbound-battle .v2-shell.step-enemy-result .helper-strip{ opacity:.72; }
+.wordbound-battle .v2-shell.step-question .v2-helper.is-selected, .wordbound-battle .v2-shell.step-result .v2-helper.is-selected, .wordbound-battle .v2-shell.step-enemy-result .v2-helper.is-selected{ opacity:1; }
+
+@media (min-width: 900px) {
+  .wordbound-battle .v2-deck{ display:grid; grid-template-columns:170px minmax(0,1fr) 370px; gap:10px; align-items:stretch; }
+  .wordbound-battle .v2-deck .deck-meta{ grid-template-columns:1fr; margin:0; }
+  .wordbound-battle .v2-deck .team-panel{ margin:0; }
+  .wordbound-battle .v2-deck .helper-strip{ grid-template-columns:1fr 1fr; margin-top:0; }
+  .wordbound-battle .v2-deck .v2-helper{ min-height:112px; }
+}
+
+@media (max-width: 760px) {
+  .wordbound-battle .v2-shell .battle-stage{ height:480px; }
+  .wordbound-battle .v2-shell .enemy-unit{ top:10px; }
+  .wordbound-battle .v2-shell .hero-unit{ bottom:106px; }
+  .wordbound-battle .strategy-panel, .wordbound-battle .v2-question{ min-height:190px; }
+  .wordbound-battle .team-panel-head{ align-items:flex-start; }
+  .wordbound-battle .team-panel-head small{ max-width:120px; text-align:right; }
+  .wordbound-battle .v2-shell .helper-strip{ grid-template-columns:repeat(2,minmax(0,1fr)); overflow:visible; gap:7px; }
+  .wordbound-battle .v2-helper{ min-width:0; min-height:92px; display:grid; grid-template-columns:48px 1fr; text-align:left; padding:5px 6px 18px; }
+  .wordbound-battle .v2-helper .helper-avatar{ width:46px; height:46px; margin:0; }
+  .wordbound-battle .v2-helper .helper-copy{ text-align:left; align-self:center; min-width:0; }
+  .wordbound-battle .v2-helper .helper-name{ font-size:11px; }
+  .wordbound-battle .v2-helper .helper-role{ font-size:8px; }
+  .wordbound-battle .helper-effectiveness{ font-size:6.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wordbound-battle .helper-energy-row{ left:6px; right:6px; }
+}
+
+@media (max-width: 420px) {
+  .wordbound-battle .v2-shell .battle-stage{ height:480px; }
+  .wordbound-battle .v2-shell .combat-card{ width:185px; }
+  .wordbound-battle .v2-shell .enemy-avatar-wrap{ width:96px; }
+  .wordbound-battle .v2-shell .helper-avatar-large{ width:96px; }
+  .wordbound-battle .v2-shell .helper-avatar-large.is-tula-waiting{ width:92px; height:126px; }
+  .wordbound-battle .intent-chip{ grid-template-columns:auto 1fr; }
+  .wordbound-battle .intent-chip small{ grid-column:2; }
+  .wordbound-battle .strategy-panel{ padding:12px; }
+  .wordbound-battle .strategy-panel h3{ font-size:17px; }
+  .wordbound-battle .strategy-panel p{ font-size:10px; }
+  .wordbound-battle .choose-panel.has-selection{ grid-template-columns:60px 1fr; }
+  .wordbound-battle .selected-helper-mini{ width:60px; height:60px; }
+  .wordbound-battle .result-word-row{ align-items:flex-start; flex-direction:column; gap:4px; }
+  .wordbound-battle .result-word-row b{ text-align:left; }
+  .wordbound-battle .enemy-turn-preview{ grid-template-columns:1fr; gap:3px; }
+  .wordbound-battle .team-panel{ padding:8px 6px; }
+  .wordbound-battle .v2-helper{ grid-template-columns:42px 1fr; min-height:86px; }
+  .wordbound-battle .v2-helper .helper-avatar{ width:41px; height:41px; }
+  .wordbound-battle .energy-pips.is-compact .energy-pip{ width:11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordbound-battle, .wordbound-battle *, .wordbound-battle *::before, .wordbound-battle *::after{ scroll-behavior:auto !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
+
+.wordbound-battle .pressure-chip{ transition:border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+.wordbound-battle .pressure-chip b{ letter-spacing:.06em; color:#9eeadd; }
+.wordbound-battle .pressure-chip b em{ font-style:normal; font-size:9px; color:rgba(255,245,214,.66); letter-spacing:0; margin-left:4px; }
+.wordbound-battle .pressure-chip.is-danger{ border-color:rgba(255,118,104,.48); background:linear-gradient(145deg,rgba(165,54,62,.24),rgba(255,162,91,.07)); box-shadow:inset 0 0 22px rgba(239,99,88,.08); }
+.wordbound-battle .pressure-chip.is-danger b{ color:#ffad97; }
+.wordbound-battle .enemy-turn-preview.is-danger{ border-color:rgba(255,122,105,.30); background:rgba(190,67,65,.12); }
+
+.wordbound-battle .sentence-question{ min-height:300px; }
+.wordbound-battle .sentence-source{ padding-bottom:7px; }
+.wordbound-battle .sentence-source strong{ font-size:clamp(20px,4.2vw,31px); line-height:1.12; }
+.wordbound-battle .sentence-build-zone{ min-height:62px; border:1px dashed rgba(116,223,211,.28); border-radius:14px; padding:8px 10px; background:rgba(0,16,29,.20); display:flex; flex-direction:column; justify-content:center; }
+.wordbound-battle .sentence-build-zone.has-words{ border-style:solid; border-color:rgba(239,199,102,.28); background:rgba(239,199,102,.055); }
+.wordbound-battle .sentence-build-label{ display:block; color:#77dcd0; font-size:7px; font-weight:950; letter-spacing:.14em; margin-bottom:4px; }
+.wordbound-battle .sentence-built{ color:#fff3c9; font-size:14px; font-weight:850; line-height:1.35; min-height:19px; }
+.wordbound-battle .sentence-build-zone:not(.has-words) .sentence-built{ color:rgba(220,244,238,.44); font-weight:700; font-size:11px; }
+.wordbound-battle .sentence-token-bank{ display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:9px; }
+.wordbound-battle .sentence-token{ min-height:42px; padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.13); background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045)); color:#fff7dc; font-size:13px; font-weight:900; cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,255,255,.07); }
+.wordbound-battle .sentence-token:hover:not(:disabled){ border-color:rgba(105,217,207,.58); transform:translateY(-1px); }
+.wordbound-battle .sentence-token.is-used{ opacity:.22; text-decoration:line-through; }
+.wordbound-battle .sentence-actions{ display:grid; grid-template-columns:auto auto minmax(150px,1fr); gap:7px; margin-top:9px; }
+.wordbound-battle .sentence-secondary, .wordbound-battle .sentence-submit{ min-height:44px; border-radius:12px; border:1px solid rgba(255,255,255,.11); font-size:10px; font-weight:900; cursor:pointer; }
+.wordbound-battle .sentence-secondary{ background:rgba(255,255,255,.055); color:#c9eee8; padding:0 10px; }
+.wordbound-battle .sentence-submit{ background:linear-gradient(135deg,#f2ca66,#e4a746); color:#08283b; border-color:rgba(255,226,143,.36); }
+.wordbound-battle .sentence-secondary:disabled, .wordbound-battle .sentence-submit:disabled{ opacity:.34; cursor:not-allowed; }
+.wordbound-battle .sentence-submit:not(:disabled){ box-shadow:0 10px 24px rgba(226,170,68,.16),inset 0 2px 0 rgba(255,255,255,.36); }
+
+@media (max-width: 899px) {
+  .wordbound-battle .deck-meta{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 760px) {
+  .wordbound-battle .sentence-question{ min-height:310px; }
+  .wordbound-battle .sentence-source strong{ font-size:22px; }
+  .wordbound-battle .sentence-token{ min-height:44px; padding:8px 10px; font-size:12px; }
+  .wordbound-battle .sentence-actions{ grid-template-columns:1fr 1fr; }
+  .wordbound-battle .sentence-submit{ grid-column:1/-1; min-height:48px; }
+}
+
+@media (max-width: 420px) {
+  .wordbound-battle .sentence-question{ min-height:325px; }
+  .wordbound-battle .sentence-source strong{ font-size:19px; }
+  .wordbound-battle .sentence-build-zone{ min-height:58px; padding:7px 8px; }
+  .wordbound-battle .sentence-built{ font-size:12px; }
+  .wordbound-battle .sentence-token-bank{ gap:5px; }
+  .wordbound-battle .sentence-token{ min-height:42px; padding:7px 8px; font-size:11px; }
+}
