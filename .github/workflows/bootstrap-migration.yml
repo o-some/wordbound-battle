@@ -1,0 +1,73 @@
+name: Bootstrap Wordbound Battle migration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.migration/bootstrap-ready'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: wordbound-migration
+  cancel-in-progress: false
+
+jobs:
+  migrate-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Reconstruct V2.2 source
+        shell: bash
+        run: |
+          cat .migration/chunk-*.b64 | base64 -d > /tmp/wordbound-v2-2.zip
+          unzip -t /tmp/wordbound-v2-2.zip
+          unzip -oq /tmp/wordbound-v2-2.zip -d .
+          node scripts/make-standalone.mjs
+          rm -rf .migration
+          rm -f .github/workflows/bootstrap-migration.yml
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Full build and tests
+        run: npm run build
+
+      - name: Commit migrated source
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Migrate Wordbound Battle V2.2 source"
+          git push origin HEAD:main
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist-astro
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: migrate-build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
