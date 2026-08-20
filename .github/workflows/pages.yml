@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -117,15 +117,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          page_url="${PAGE_URL:-https://o-some.github.io/wordbound-battle/}"
           python - <<'PY'
           from html.parser import HTMLParser
           from urllib.parse import urljoin
 
           class P(HTMLParser):
               def __init__(self):
-                  super().__init__()
-                  self.urls=[]
+                  super().__init__(); self.urls=[]
               def handle_starttag(self, tag, attrs):
                   d=dict(attrs)
                   for key in ('src','href'):
@@ -191,4 +189,34 @@ jobs:
           git add docs/LIVE_STATUS.json
           git diff --cached --quiet && exit 0
           git commit -m "Record successful live deployment [skip ci]"
+          git push origin HEAD:main
+
+  record-failure:
+    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure' || needs.verify-live.result == 'failure') }}
+    runs-on: ubuntu-latest
+    needs: [build, deploy, verify-live]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Record failed release gate
+        shell: bash
+        run: |
+          mkdir -p docs
+          cat > docs/LIVE_STATUS.json <<EOF
+          {
+            "status": "FAIL",
+            "tested_commit": "${GITHUB_SHA}",
+            "verified_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "run_url": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
+            "build_result": "${{ needs.build.result }}",
+            "deploy_result": "${{ needs.deploy.result }}",
+            "verify_live_result": "${{ needs.verify-live.result }}"
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/LIVE_STATUS.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record failed release gate [skip ci]"
           git push origin HEAD:main
