@@ -37,8 +37,8 @@ jobs:
       - name: Build Astro site
         run: npm run build:astro
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Run mobile/desktop gameplay browser audit
         shell: bash
@@ -166,9 +166,10 @@ jobs:
               "engine_tests_19_of_19": "PASS",
               "astro_build": "PASS",
               "browser_e2e": "PASS",
-              "iphone_390x844": "PASS",
-              "android_412x915": "PASS",
-              "desktop_1280x850": "PASS",
+              "iphone_chromium_390x844": "PASS",
+              "iphone_webkit_390x844": "PASS",
+              "android_chromium_412x915": "PASS",
+              "desktop_chromium_1280x850": "PASS",
               "sentence_challenge": "PASS",
               "wrong_answer_pressure": "PASS",
               "pause_resume": "PASS",
