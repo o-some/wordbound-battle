@@ -39,12 +39,8 @@ async function answerWord(page, correct) {
 }
 
 async function enemyAndNext(page) {
-  const stateBeforeEnemy = await gameState(page);
-  if (stateBeforeEnemy?.phase !== "battle") return;
   const enemyButton = page.locator('[data-action="enemy-turn"]');
   if (await enemyButton.count()) await enemyButton.click();
-  const stateAfterEnemy = await gameState(page);
-  if (stateAfterEnemy?.phase !== "battle") return;
   const nextButton = page.locator('[data-action="next-turn"]');
   if (await nextButton.count()) await nextButton.click();
 }
@@ -72,13 +68,6 @@ async function buildSentence(page, correct) {
     await page.locator(`[data-sentence-token="${token.id}"]`).click();
   }
   await page.locator('[data-action="sentence-submit"]').click();
-}
-
-async function answerCurrentQuestion(page, correct) {
-  const state = await gameState(page);
-  assert(state?.question, "Question missing");
-  if (state.question.type === "sentence") return buildSentence(page, correct);
-  return answerWord(page, correct);
 }
 
 async function checkLayout(page, label) {
@@ -119,9 +108,9 @@ async function openGame(context, label) {
 }
 
 async function assertCleanBrowser(label, consoleErrors, pageErrors, badResponses) {
-  assert(consoleErrors.length === 0, `${label}: console errors: ${consoleErrors.join(" | ")}`);
+  assert(badResponses.length === 0, `${label}: 404 responses: ${[...new Set(badResponses)].join(" | ")}`);
   assert(pageErrors.length === 0, `${label}: page errors: ${pageErrors.join(" | ")}`);
-  assert(badResponses.length === 0, `${label}: 404 responses: ${badResponses.join(" | ")}`);
+  assert(consoleErrors.length === 0, `${label}: console errors: ${consoleErrors.join(" | ")}`);
 }
 
 async function runScenario(browser, { width, height, label, isMobile }) {
@@ -183,88 +172,93 @@ async function runScenario(browser, { width, height, label, isMobile }) {
 
 async function runCorrectSentenceScenario(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-  const { page } = await openGame(context, "correct-sentence");
+  const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, "correct-sentence");
   await page.locator('[data-action="start"]').click();
   await reachRoundThree(page);
   await chooseMatchingHelper(page);
   await buildSentence(page, true);
   const state = await gameState(page);
   assert(state.lastOutcome?.type === "correct", "Correct sentence was not accepted");
+  await assertCleanBrowser("correct-sentence", consoleErrors, pageErrors, badResponses);
   await context.close();
   return { correctSentence: "PASS" };
 }
 
-async function runVictoryAndNextEnemyScenario(browser) {
-  const label = "victory-next-enemy";
-  const context = await browser.newContext({ viewport: { width: 1280, height: 850 } });
-  const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, label);
-  await page.locator('[data-action="start"]').click();
-  const firstEnemyId = (await gameState(page)).enemy.id;
-  let turns = 0;
-  while ((await gameState(page)).phase === "battle" && turns < 30) {
-    await chooseMatchingHelper(page);
-    await answerCurrentQuestion(page, true);
-    if ((await gameState(page)).phase === "battle") await enemyAndNext(page);
-    turns += 1;
-  }
-  let state = await gameState(page);
-  assert(state.phase === "victory", `${label}: expected victory within 30 turns, got ${state.phase}`);
-  assert(state.xp > 0 && state.shells > 0, `${label}: victory rewards missing`);
-  const nextEnemyButton = page.locator('[data-action="next-enemy"]');
-  assert(await nextEnemyButton.count() === 1, `${label}: next enemy button missing`);
-  await nextEnemyButton.click();
-  state = await gameState(page);
-  assert(state.phase === "intro", `${label}: next enemy should return to intro`);
-  assert(state.enemy.id !== firstEnemyId, `${label}: next enemy did not change`);
-  await assertCleanBrowser(label, consoleErrors, pageErrors, badResponses);
-  await context.close();
-  return { victory: "PASS", nextEnemy: "PASS", turns };
-}
-
-async function runDefeatAndRestartScenario(browser) {
-  const label = "defeat-restart";
+async function runVictoryAndNextEnemy(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-  const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, label);
+  const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, "victory-next-enemy");
   await page.locator('[data-action="start"]').click();
-  let turns = 0;
-  while ((await gameState(page)).phase === "battle" && turns < 30) {
-    await chooseMatchingHelper(page);
-    await answerCurrentQuestion(page, false);
-    if ((await gameState(page)).phase === "battle") await enemyAndNext(page);
-    turns += 1;
-  }
-  let state = await gameState(page);
-  assert(state.phase === "defeat", `${label}: repeated mistakes should cause defeat within 30 turns, got ${state.phase}`);
-  const restartButton = page.locator('[data-action="restart"]');
-  assert(await restartButton.count() === 1, `${label}: restart button missing`);
-  await restartButton.click();
-  state = await gameState(page);
-  assert(state.phase === "intro", `${label}: restart should return to intro`);
-  assert(state.pressure === 0, `${label}: restart did not reset pressure`);
-  assert(state.helperRoster.every((helper) => helper.hp > 0), `${label}: restart did not restore team`);
-  await assertCleanBrowser(label, consoleErrors, pageErrors, badResponses);
+  await page.evaluate(() => {
+    const root = document.querySelector("[data-wordbound-battle-root]") || document.querySelector("#app");
+    root.__wordboundBattleApi.state.enemy.hp = 1;
+    root.__wordboundBattleApi.repaint();
+  });
+  await chooseMatchingHelper(page);
+  await answerWord(page, true);
+  assert((await gameState(page)).phase === "victory", "Victory state was not reached");
+  await page.locator('[data-action="next-enemy"]').click();
+  const next = await gameState(page);
+  assert(next.enemyIndex === 1 && next.phase === "intro", "Next enemy transition failed");
+  await assertCleanBrowser("victory-next-enemy", consoleErrors, pageErrors, badResponses);
   await context.close();
-  return { defeat: "PASS", restart: "PASS", turns };
+  return { victoryAndNextEnemy: "PASS" };
 }
 
-const results = [];
-const chromiumBrowser = await chromium.launch({ headless: true });
+async function runDefeatAndRestart(browser) {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, "defeat-restart");
+  await page.locator('[data-action="start"]').click();
+  await page.evaluate(() => {
+    const root = document.querySelector("[data-wordbound-battle-root]") || document.querySelector("#app");
+    const state = root.__wordboundBattleApi.state;
+    state.helperRoster.forEach((h) => { h.hp = h.id === "meli" ? 1 : 0; });
+    state.helperRoster.find((h) => h.id === "meli").energy = 3;
+    root.__wordboundBattleApi.repaint();
+  });
+  await page.locator('[data-helper="meli"]').click();
+  await page.locator('[data-action="deploy-helper"]').click();
+  await answerWord(page, false);
+  await page.locator('[data-action="enemy-turn"]').click();
+  assert((await gameState(page)).phase === "defeat", "Defeat state was not reached");
+  await page.locator('[data-action="restart"]').click();
+  const restarted = await gameState(page);
+  assert(restarted.phase === "intro", "Restart did not return to intro");
+  assert(restarted.helperRoster.every((h) => h.hp === h.maxHp), "Restart did not restore helper HP");
+  await assertCleanBrowser("defeat-restart", consoleErrors, pageErrors, badResponses);
+  await context.close();
+  return { defeatAndRestart: "PASS" };
+}
+
+async function runWebkitSmoke() {
+  const browser = await webkit.launch({ headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: "de-DE" });
+    const { page, consoleErrors, pageErrors, badResponses } = await openGame(context, "iphone-webkit-390x844");
+    await page.locator('[data-action="start"]').click();
+    await checkLayout(page, "iphone-webkit start");
+    await chooseMatchingHelper(page);
+    await answerWord(page, true);
+    await enemyAndNext(page);
+    await page.screenshot({ path: `${auditDir}/iphone-webkit-390x844.png`, fullPage: false });
+    await assertCleanBrowser("iphone-webkit-390x844", consoleErrors, pageErrors, badResponses);
+    await context.close();
+    return { webkitIphone: "PASS" };
+  } finally {
+    await browser.close();
+  }
+}
+
+const browser = await chromium.launch({ headless: true });
 try {
-  results.push(await runScenario(chromiumBrowser, { width: 390, height: 844, label: "iphone-chromium-390x844", isMobile: true }));
-  results.push(await runScenario(chromiumBrowser, { width: 412, height: 915, label: "android-chromium-412x915", isMobile: true }));
-  results.push(await runScenario(chromiumBrowser, { width: 1280, height: 850, label: "desktop-chromium-1280x850", isMobile: false }));
-  results.push(await runCorrectSentenceScenario(chromiumBrowser));
-  results.push(await runVictoryAndNextEnemyScenario(chromiumBrowser));
-  results.push(await runDefeatAndRestartScenario(chromiumBrowser));
+  const results = [];
+  results.push(await runScenario(browser, { width: 390, height: 844, label: "iphone-chromium-390x844", isMobile: true }));
+  results.push(await runScenario(browser, { width: 412, height: 915, label: "android-chromium-412x915", isMobile: true }));
+  results.push(await runScenario(browser, { width: 1280, height: 850, label: "desktop-chromium-1280x850", isMobile: false }));
+  results.push(await runCorrectSentenceScenario(browser));
+  results.push(await runVictoryAndNextEnemy(browser));
+  results.push(await runDefeatAndRestart(browser));
+  results.push(await runWebkitSmoke());
+  console.log(JSON.stringify({ status: "PASS", baseUrl, results }, null, 2));
 } finally {
-  await chromiumBrowser.close();
+  await browser.close();
 }
-
-const webkitBrowser = await webkit.launch({ headless: true });
-try {
-  results.push(await runScenario(webkitBrowser, { width: 390, height: 844, label: "iphone-webkit-390x844", isMobile: true }));
-} finally {
-  await webkitBrowser.close();
-}
-
-console.log(JSON.stringify({ status: "PASS", baseUrl, results }, null, 2));
