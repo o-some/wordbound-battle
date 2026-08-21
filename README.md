@@ -15,8 +15,11 @@ Der Spieler wählt pro Runde einen Gehilfen, berücksichtigt die aktuelle Gegner
 ## Aktueller Funktionsstand
 
 - Gehilfenwahl pro Runde: Meli, Neri, Skippi, Fino
-- byte-verifizierte lokale WebP-Sprites für alle vier Gehilfen
+- lokale Produktionssprites für alle vier Gehilfen
 - Gehilfen-Sprites in Teamkarten, Auswahl und aktivem Kampfbereich
+- **Piraten-Tula** in Intro, Guide und Warteposition
+- **Piraten-Boss-Look für Coralox, Nebulon und Sturmkrab**, bei unveränderten Fähigkeiten/HP/Schwächen
+- sichere Grafik-Fallbacks: alte Tula-/SVG-Grafiken bleiben sichtbar, falls ein neues Pirate-Asset nicht dekodiert
 - mobile 3-Schritt-Kampfführung: Gehilfe wählen → Aufgabe lösen → Gegnerzug
 - Energie + Regeneration auf der Bank
 - wechselnde Gegner-Schwächen
@@ -85,20 +88,23 @@ Vite-Ausgabe: `dist/`
 
 Letzte vollständig getestete und live verifizierte Game-Code-SHA:
 
-`e3f5f16782ed2fa2769b6ffefd79af5cbb225133`
+`c7eac9c7ec94b4420fc4961b6fa006736a982e4b`
 
-Live-Verifikationsrecord:
+Live-Verifikationsrecord danach:
 
-`0067189a19e047c00f62c5d4634e9a9ed7fb6a24`
+`49a62d9242956ab2223927db8c215f89cd861ab1`
 
 Dazu erfolgreich geprüft:
 - 19/19 Engine Tests
 - Astro Build
+- Standalone-Fallback
 - iPhone-nah WebKit 390×844
 - iPhone-/Android-nahe Chromium-Viewports
 - Desktop Chromium 1280×850
 - vollständiger Browser-Gameplay-Flow inkl. Satzbau, Sieg, nächster Gegner, Niederlage und Neustart
-- byte-verifizierte WebP-Sprites für Meli, Neri, Skippi und Fino
+- alle vier Pirate-AVIFs in Chromium und WebKit dekodierbar
+- Pirate-Tula und Pirate-Gegner im Intro sowie im Kampf gerendert
+- sichere Fallback-Logik für neue Art-Assets
 - kein horizontaler Overflow
 - keine Überlagerung zwischen aktivem Gehilfen und Tula-Guide
 - keine Browser-JavaScript-/Page-Errors
@@ -110,6 +116,11 @@ Dazu erfolgreich geprüft:
 Maschinenlesbarer Live-Status: `docs/LIVE_STATUS.json`  
 Vollständige Checkliste: `docs/TEST_CHECKLIST.md`  
 Asset-Dokumentation: `docs/ASSET_MANIFEST.md`
+
+## Rollback für Pirate-Art
+
+- Vor kompletter Pirate-Art-Änderung: `pre-pirate-art-refresh-20260821`
+- Vor der Runtime-Verdrahtung: `pre-pirate-runtime-integration-20260821`
 
 ## Host-Integration
 
