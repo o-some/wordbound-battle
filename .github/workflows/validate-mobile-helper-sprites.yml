@@ -3,6 +3,8 @@ name: Validate mobile helper sprites
 on:
   push:
     branches: [mobile-helper-sprites-v3]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -38,7 +40,7 @@ jobs:
       - name: Install Playwright Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
 
-      - name: Run Chromium mobile/desktop gameplay audit
+      - name: Run mobile/desktop gameplay browser audit
         shell: bash
         run: |
           set -euo pipefail
@@ -62,13 +64,42 @@ jobs:
           echo "WebP assets emitted: $count"
           test "$count" -ge 4
 
-      - name: Verify built page and static assets locally
+      - name: Smoke-test standalone fallback
         shell: bash
         run: |
           set -euo pipefail
-          code=$(curl -L -sS -o /tmp/page.html -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/)
-          test "$code" = "200"
-          grep -qi 'Wordbound Battle' /tmp/page.html
+          python3 -m http.server 8765 > /tmp/standalone.log 2>&1 &
+          standalone_pid=$!
+          trap 'kill $standalone_pid || true' EXIT
+          for attempt in $(seq 1 30); do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototype.html || true)
+            [ "$code" = "200" ] && break
+            sleep 1
+          done
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          const browser = await chromium.launch({ headless: true });
+          try {
+            const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+            const page = await context.newPage();
+            const errors = [];
+            const bad = [];
+            page.on('pageerror', e => errors.push(String(e)));
+            page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+            page.on('response', r => { if (r.status() === 404) bad.push(r.url()); });
+            const response = await page.goto('http://127.0.0.1:8765/prototype.html', { waitUntil: 'networkidle' });
+            if (response?.status() !== 200) throw new Error(`Standalone HTTP ${response?.status()}`);
+            await page.locator('[data-action="start"]').click();
+            if (await page.locator('[data-helper]').count() !== 4) throw new Error('Standalone helper count mismatch');
+            const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+            if (overflow) throw new Error('Standalone horizontal overflow on 390px viewport');
+            if (errors.length) throw new Error(`Standalone errors: ${errors.join(' | ')}`);
+            if (bad.length) throw new Error(`Standalone 404s: ${bad.join(' | ')}`);
+            await context.close();
+          } finally {
+            await browser.close();
+          }
+          NODE
 
       - name: Upload browser audit screenshots
         if: always()
