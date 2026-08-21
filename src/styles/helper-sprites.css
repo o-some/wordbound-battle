@@ -75,10 +75,10 @@
 }
 
 @media (max-width:760px){
-  .wordbound-battle .v2-shell .battle-stage{ height:430px; }
+  .wordbound-battle .v2-shell .battle-stage{ height:455px; }
   .wordbound-battle .v2-shell .enemy-unit{ top:8px; }
-  .wordbound-battle .v2-shell .hero-unit{ bottom:96px; }
-  .wordbound-battle .v2-shell .helper-avatar-large{ width:104px; }
+  .wordbound-battle .v2-shell .hero-unit{ bottom:112px; }
+  .wordbound-battle .v2-shell .helper-avatar-large{ width:102px; }
 
   .wordbound-battle .control-deck.v2-deck{
     display:flex;
@@ -110,11 +110,11 @@
 }
 
 @media (max-width:420px){
-  .wordbound-battle .v2-shell .battle-stage{ height:414px; }
+  .wordbound-battle .v2-shell .battle-stage{ height:445px; }
   .wordbound-battle .v2-shell .combat-card{ width:178px; padding:9px 10px 10px; }
   .wordbound-battle .v2-shell .enemy-avatar-wrap{ width:92px; }
   .wordbound-battle .v2-shell .helper-avatar-large{ width:98px; }
-  .wordbound-battle .v2-shell .hero-unit{ bottom:92px; }
+  .wordbound-battle .v2-shell .hero-unit{ bottom:108px; }
   .wordbound-battle .tula-guide{ min-height:64px; }
   .wordbound-battle .v2-helper{ grid-template-columns:50px 1fr; min-height:96px; }
   .wordbound-battle .v2-helper .helper-avatar{ width:48px; height:48px; }
