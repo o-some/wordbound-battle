@@ -15,7 +15,82 @@ import {
   undoSentenceToken,
   startBattle,
 } from "./game/engine.js";
+import { HELPER_SPRITES } from "./game/helper-sprites.js";
 import { render } from "./game/ui.js";
+
+function helperById(state, id) {
+  return state.helperRoster.find((helper) => helper.id === id) || null;
+}
+
+function spriteImage(helper, className = "helper-sprite") {
+  const src = helper ? HELPER_SPRITES[helper.id] : null;
+  if (!src) return null;
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = helper.name;
+  img.className = className;
+  img.decoding = "async";
+  img.draggable = false;
+  return img;
+}
+
+function replaceSvgWithSprite(container, helper, className) {
+  if (!container || !helper || !HELPER_SPRITES[helper.id]) return;
+  container.querySelector("svg")?.remove();
+  if (!container.querySelector(".helper-sprite")) {
+    const img = spriteImage(helper, className);
+    if (img) container.prepend(img);
+  }
+}
+
+function battleStepGuide(state) {
+  const step = state.turnStep === "choose" ? 1 : state.turnStep === "question" ? 2 : 3;
+  const task = state.question?.type === "sentence" ? "Satz bauen" : "Wort lösen";
+  const hint = step === 1
+    ? "Tippe unten auf einen Gehilfen. Grün markiert = beste Wahl gegen die aktuelle Schwäche."
+    : step === 2
+      ? `Löse jetzt ${state.question?.type === "sentence" ? "den Satz" : "das Wort"}, um deinen Angriff auszuführen.`
+      : state.turnStep === "result"
+        ? "Dein Angriff ist beendet. Jetzt folgt der angekündigte Gegnerzug."
+        : "Danach beginnt die nächste Runde und du wählst dein Teammitglied erneut.";
+  return `<div class="mobile-battle-steps" aria-label="Kampfschritte">
+    <div class="mobile-step ${step === 1 ? "is-active" : "is-done"}"><b>1</b><span>Gehilfe wählen</span></div>
+    <div class="mobile-step ${step === 2 ? "is-active" : step > 2 ? "is-done" : ""}"><b>2</b><span>${task}</span></div>
+    <div class="mobile-step ${step === 3 ? "is-active" : ""}"><b>3</b><span>Gegnerzug</span></div>
+    <p>${hint}</p>
+  </div>`;
+}
+
+function enhanceRenderedUi(app, state) {
+  app.querySelectorAll("[data-helper]").forEach((card) => {
+    const helper = helperById(state, card.dataset.helper);
+    replaceSvgWithSprite(card.querySelector(".helper-avatar"), helper, "helper-sprite helper-sprite-card");
+  });
+
+  const activeHelper = helperById(state, state.activeHelperId || state.selectedHelperId);
+  replaceSvgWithSprite(
+    app.querySelector(".helper-avatar-large:not(.is-tula-waiting)"),
+    activeHelper,
+    "helper-sprite helper-sprite-active",
+  );
+  replaceSvgWithSprite(
+    app.querySelector(".selected-helper-mini"),
+    helperById(state, state.selectedHelperId),
+    "helper-sprite helper-sprite-mini",
+  );
+
+  const actionArea = app.querySelector(".v2-action-area");
+  if (actionArea && state.phase === "battle") {
+    actionArea.insertAdjacentHTML("afterbegin", battleStepGuide(state));
+  }
+
+  if (state.turnStep === "choose") {
+    const teamHeadline = app.querySelector(".team-panel-head b");
+    const teamHint = app.querySelector(".team-panel-head small");
+    if (teamHeadline) teamHeadline.textContent = "Tippe auf einen Gehilfen";
+    if (teamHint) teamHint.textContent = "✓ Grün = passend · ⚡ Energie beachten";
+  }
+}
 
 /** Mounts one self-contained Wordbound Battle instance into a host element. */
 export function mountWordboundBattle(rootOrSelector = "#app", options = {}) {
@@ -26,7 +101,12 @@ export function mountWordboundBattle(rootOrSelector = "#app", options = {}) {
   if (Number.isFinite(options.initialXp)) state.xp = Math.max(0, Number(options.initialXp));
   if (Number.isFinite(options.initialShells)) state.shells = Math.max(0, Number(options.initialShells));
   let destroyed = false;
-  function paint() { if (destroyed) return; app.innerHTML = `<div class="wordbound-battle">${render(state)}</div>`; wireEvents(); }
+  function paint() {
+    if (destroyed) return;
+    app.innerHTML = `<div class="wordbound-battle">${render(state)}</div>`;
+    enhanceRenderedUi(app, state);
+    wireEvents();
+  }
   function emitProgress(beforeXp, beforeShells) {
     const xpDelta = state.xp - beforeXp, shellsDelta = state.shells - beforeShells;
     if (!xpDelta && !shellsDelta) return;
