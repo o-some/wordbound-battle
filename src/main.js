@@ -16,6 +16,7 @@ import {
   startBattle,
 } from "./game/engine.js";
 import { HELPER_SPRITES } from "./game/helper-sprites.js";
+import { PIRATE_ENEMY_ASSETS, TULA_PIRATE_ASSET } from "./game/pirate-art.js";
 import { render } from "./game/ui.js";
 
 function spriteMap() {
@@ -55,6 +56,67 @@ function replaceSvgWithSprite(container, helper, className) {
   }
 }
 
+function installPirateArt(container, src, alt, className, layout = {}) {
+  if (!container || !src) return;
+  const marker = className.split(" ")[0];
+  if (container.querySelector(`.${marker}`)) return;
+
+  const fallbackNodes = [...container.children].filter((node) => node.matches?.("svg, img"));
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.className = className;
+  img.decoding = "async";
+  img.draggable = false;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.display = "block";
+  img.style.objectFit = "contain";
+  img.style.opacity = "0";
+  img.style.transition = "opacity 120ms ease";
+  Object.assign(img.style, layout);
+
+  const reveal = () => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    fallbackNodes.forEach((node) => node.remove());
+    img.style.opacity = "1";
+    container.dataset.pirateArtReady = "true";
+  };
+  const restoreFallback = () => {
+    img.remove();
+    delete container.dataset.pirateArtReady;
+  };
+
+  img.addEventListener("load", reveal, { once: true });
+  img.addEventListener("error", restoreFallback, { once: true });
+  container.prepend(img);
+  if (img.complete) reveal();
+}
+
+function enemyArtKey(state) {
+  return state?.enemy?.id || state?.enemy?.avatar || null;
+}
+
+function installEnemyPirateArt(container, state, className) {
+  const key = enemyArtKey(state);
+  const src = key ? PIRATE_ENEMY_ASSETS[key] : null;
+  installPirateArt(container, src, state?.enemy?.name || "Piratengegner", className, {
+    filter: "drop-shadow(0 18px 28px rgba(0,0,0,.28))",
+    maxWidth: container?.classList.contains("enemy-avatar-wrap") ? "92%" : "100%",
+    maxHeight: container?.classList.contains("enemy-avatar-wrap") ? "92%" : "100%",
+    transform: container?.classList.contains("enemy-avatar-wrap") ? "translateY(4px)" : "none",
+    margin: "0 auto",
+  });
+}
+
+function installTulaPirateArt(container, className = "tula-pirate-sprite") {
+  installPirateArt(container, TULA_PIRATE_ASSET, "Piraten-Tula", className, {
+    filter: "drop-shadow(0 16px 26px rgba(0,0,0,.22))",
+    transform: "translateY(2px)",
+    margin: "0 auto",
+  });
+}
+
 function battleStepGuide(state) {
   const step = state.turnStep === "choose" ? 1 : state.turnStep === "question" ? 2 : 3;
   const task = state.question?.type === "sentence" ? "Satz bauen" : "Wort lösen";
@@ -90,6 +152,12 @@ function enhanceRenderedUi(app, state) {
     helperById(state, state.selectedHelperId),
     "helper-sprite helper-sprite-mini",
   );
+
+  installTulaPirateArt(app.querySelector(".tula-portrait"), "tula-pirate-sprite tula-pirate-sprite-intro");
+  installTulaPirateArt(app.querySelector(".tula-mini"), "tula-pirate-sprite tula-pirate-sprite-guide");
+  installTulaPirateArt(app.querySelector(".helper-avatar-large.is-tula-waiting"), "tula-pirate-sprite tula-pirate-sprite-waiting");
+  installEnemyPirateArt(app.querySelector(".enemy-intro-avatar"), state, "enemy-pirate-sprite enemy-pirate-sprite-intro");
+  installEnemyPirateArt(app.querySelector(".enemy-avatar-wrap"), state, "enemy-pirate-sprite enemy-pirate-sprite-battle");
 
   const actionArea = app.querySelector(".v2-action-area");
   if (actionArea && state.phase === "battle") {
