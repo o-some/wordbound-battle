@@ -1,0 +1,123 @@
+.wordbound-battle .helper-sprite{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+  pointer-events:none;
+}
+
+.wordbound-battle .helper-avatar{
+  overflow:hidden;
+  border-radius:14px;
+  background:radial-gradient(circle at 50% 22%,rgba(255,255,255,.13),rgba(255,255,255,.025));
+}
+.wordbound-battle .helper-sprite-card{ transform:scale(1.06); }
+.wordbound-battle .selected-helper-mini{ display:grid; place-items:center; overflow:hidden; }
+.wordbound-battle .helper-sprite-mini{ transform:scale(1.03); }
+.wordbound-battle .helper-sprite-active{
+  transform:translateY(4px) scale(1.08);
+  transform-origin:center bottom;
+  filter:drop-shadow(0 12px 12px rgba(0,0,0,.22));
+}
+
+.wordbound-battle .mobile-battle-steps{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  margin-bottom:9px;
+}
+.wordbound-battle .mobile-step{
+  min-height:44px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  padding:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.wordbound-battle .mobile-step b{
+  width:22px;
+  height:22px;
+  flex:none;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.08);
+  color:#c9eee8;
+  font-size:10px;
+}
+.wordbound-battle .mobile-step span{
+  font-size:9px;
+  font-weight:900;
+  color:rgba(240,251,246,.78);
+  line-height:1.15;
+}
+.wordbound-battle .mobile-step.is-active{
+  border-color:rgba(239,199,102,.5);
+  background:linear-gradient(145deg,rgba(239,199,102,.20),rgba(255,255,255,.04));
+}
+.wordbound-battle .mobile-step.is-active b{ background:#efc766; color:#06283f; }
+.wordbound-battle .mobile-step.is-done{
+  border-color:rgba(132,227,181,.32);
+  background:rgba(84,182,137,.11);
+}
+.wordbound-battle .mobile-step.is-done b{ background:#84e3b5; color:#062d39; }
+.wordbound-battle .mobile-battle-steps>p{
+  grid-column:1/-1;
+  margin:0 2px;
+  color:rgba(196,236,229,.72);
+  font-size:9px;
+  line-height:1.35;
+}
+
+@media (max-width:760px){
+  .wordbound-battle .v2-shell .battle-stage{ height:455px; }
+  .wordbound-battle .v2-shell .enemy-unit{ top:8px; }
+  .wordbound-battle .v2-shell .hero-unit{ bottom:112px; }
+  .wordbound-battle .v2-shell .helper-avatar-large{ width:102px; }
+
+  .wordbound-battle .control-deck.v2-deck{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:15px 8px 8px;
+  }
+  .wordbound-battle .v2-deck .deck-meta{ order:1; margin-bottom:0; }
+  .wordbound-battle .v2-deck .v2-action-area{ order:2; }
+  .wordbound-battle .v2-deck .team-panel{ order:3; margin-top:0; }
+  .wordbound-battle .v2-shell.step-choose .team-panel{ order:2; }
+  .wordbound-battle .v2-shell.step-choose .v2-action-area{ order:3; }
+
+  .wordbound-battle .v2-shell .helper-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    overflow:visible;
+  }
+  .wordbound-battle .v2-helper{
+    min-height:100px;
+    grid-template-columns:54px 1fr;
+    padding:7px 7px 20px;
+  }
+  .wordbound-battle .v2-helper .helper-avatar{ width:52px; height:52px; margin:0; }
+  .wordbound-battle .v2-helper .helper-name{ font-size:12px; }
+  .wordbound-battle .team-panel-head{ align-items:flex-start; }
+  .wordbound-battle .team-panel-head small{ max-width:150px; text-align:right; }
+  .wordbound-battle .battle-log{ display:none; }
+}
+
+@media (max-width:420px){
+  .wordbound-battle .v2-shell .battle-stage{ height:445px; }
+  .wordbound-battle .v2-shell .combat-card{ width:178px; padding:9px 10px 10px; }
+  .wordbound-battle .v2-shell .enemy-avatar-wrap{ width:92px; }
+  .wordbound-battle .v2-shell .helper-avatar-large{ width:98px; }
+  .wordbound-battle .v2-shell .hero-unit{ bottom:108px; }
+  .wordbound-battle .tula-guide{ min-height:64px; }
+  .wordbound-battle .v2-helper{ grid-template-columns:50px 1fr; min-height:96px; }
+  .wordbound-battle .v2-helper .helper-avatar{ width:48px; height:48px; }
+  .wordbound-battle .mobile-step{ min-height:42px; padding:5px; }
+  .wordbound-battle .mobile-step span{ font-size:8px; }
+}

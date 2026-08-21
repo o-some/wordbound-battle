@@ -3,7 +3,12 @@ import assert from 'node:assert/strict';
 const read=(p)=>fs.readFileSync(p,'utf8');
 const exists=(p)=>fs.existsSync(p);
 const pkg=JSON.parse(read('package.json'));
-const required=['src/game/data.js','src/game/state.js','src/game/engine.js','src/game/ui.js','src/main.js','src/styles.css','src/styles/part-01.css','src/styles/part-02.css','src/styles/part-03.css','src/pages/index.astro','src/components/WordboundBattle.astro','astro.config.mjs','index.html','CAPACITOR_INTEGRATION.md'];
+const required=[
+  'src/game/data.js','src/game/state.js','src/game/engine.js','src/game/ui.js','src/game/helper-sprites.js',
+  'src/main.js','src/styles.css','src/styles/part-01.css','src/styles/part-02.css','src/styles/part-03.css','src/styles/helper-sprites.css',
+  'src/assets/helpers/meli.webp','src/assets/helpers/neri.webp','src/assets/helpers/skippi.webp','src/assets/helpers/fino.webp',
+  'src/pages/index.astro','src/components/WordboundBattle.astro','astro.config.mjs','index.html','CAPACITOR_INTEGRATION.md'
+];
 required.forEach((p)=>assert.ok(exists(p),`missing ${p}`));
 assert.ok(pkg.devDependencies?.vite,'Vite dependency missing');
 assert.ok(pkg.devDependencies?.astro,'Astro dependency missing');
@@ -12,11 +17,11 @@ assert.ok(pkg.scripts?.test,'test script missing');
 assert.ok(/^\^7\./.test(pkg.devDependencies.astro),'Astro 7.x alignment missing');
 assert.ok(/^\^8\./.test(pkg.devDependencies.vite),'Vite 8.x alignment missing');
 assert.ok(pkg.engines?.node,'Node engine constraint missing');
-const css=['src/styles.css','src/styles/part-01.css','src/styles/part-02.css','src/styles/part-03.css'].map(read).join('\n');
+const css=['src/styles.css','src/styles/part-01.css','src/styles/part-02.css','src/styles/part-03.css','src/styles/helper-sprites.css'].map(read).join('\n');
 assert.ok(css.includes('.wordbound-battle'),'CSS scope missing');
 assert.ok(!/(^|\n)\s*:root\s*\{/.test(css),'unscoped :root rule found');
 assert.ok(!/(^|\n)\s*body\s*\{/.test(css),'unscoped body rule found');
-assert.ok(css.includes('@media (max-width: 760px)'),'mobile breakpoint missing');
+assert.ok(css.includes('@media (max-width:760px)') || css.includes('@media (max-width: 760px)'),'mobile breakpoint missing');
 assert.ok(css.includes('@media (min-width: 761px)'),'tablet/desktop separation breakpoint missing');
 assert.ok(css.includes('prefers-reduced-motion'),'reduced-motion support missing');
 const main=read('src/main.js');
@@ -25,6 +30,10 @@ assert.ok(main.includes('tulas:wordbound:reward'),'reward integration event miss
 assert.ok(main.includes('data-wordbound-battle-root'),'auto-mount integration missing');
 assert.ok(main.includes('data-role="source-language"'),'host-local source language selector missing');
 assert.ok(main.includes('data-role="target-language"'),'host-local target language selector missing');
+assert.ok(main.includes('helper-sprites.js'),'helper sprite module import missing');
+assert.ok(main.includes('mobile-battle-steps'),'mobile step guidance missing');
+const spriteModule=read('src/game/helper-sprites.js');
+for(const id of ['meli','neri','skippi','fino']) assert.ok(spriteModule.includes(id),`helper sprite mapping missing: ${id}`);
 const runtime=['src/game/data.js','src/game/state.js','src/game/engine.js','src/game/ui.js','src/main.js'].map(read).join('\n');
 assert.ok(!/\bfetch\s*\(/.test(runtime),'unexpected runtime network fetch found');
 assert.ok(!/https?:\/\//.test(runtime),'unexpected runtime external URL found');
@@ -33,6 +42,8 @@ console.log('- Modular game core: OK');
 console.log('- Vite host entry: OK');
 console.log('- Astro wrapper: OK');
 console.log('- CSS host scoping: OK');
+console.log('- Four local helper sprites: OK');
+console.log('- Mobile step guidance: OK');
 console.log('- Capacitor host integration notes: OK');
 console.log('- Astro 7 / Vite 8 version alignment: OK');
 console.log('- Host-local language controls: OK');

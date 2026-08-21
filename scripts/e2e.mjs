@@ -119,9 +119,9 @@ async function openGame(context, label) {
 }
 
 async function assertCleanBrowser(label, consoleErrors, pageErrors, badResponses) {
-  assert(consoleErrors.length === 0, `${label}: console errors: ${consoleErrors.join(" | ")}`);
+  assert(badResponses.length === 0, `${label}: 404 responses: ${[...new Set(badResponses)].join(" | ")}`);
   assert(pageErrors.length === 0, `${label}: page errors: ${pageErrors.join(" | ")}`);
-  assert(badResponses.length === 0, `${label}: 404 responses: ${badResponses.join(" | ")}`);
+  assert(consoleErrors.length === 0, `${label}: console errors: ${consoleErrors.join(" | ")}`);
 }
 
 async function runScenario(browser, { width, height, label, isMobile }) {

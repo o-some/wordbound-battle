@@ -10,6 +10,6 @@ function stripModule(src){
   return out.join('\n');
 }
 const js=['src/game/data.js','src/game/state.js','src/game/engine.js','src/game/ui.js','src/main.js'].map(p=>stripModule(read(p))).join('\n\n');
-const css=read('src/styles.css');
+const css=['src/styles/part-01.css','src/styles/part-02.css','src/styles/part-03.css','src/styles/helper-sprites.css'].map(read).join('\n\n');
 const html=`<!doctype html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"><meta name="theme-color" content="#031e35"><title>Tula's Island · Wordbound Battle V2.2 · Standalone</title><style>${css}</style></head><body style="margin:0;background:#07182b"><div id="app"></div><script>${js.replaceAll('</script>','<\\/script>')}</script></body></html>`;
 fs.writeFileSync('prototype.html',html);
