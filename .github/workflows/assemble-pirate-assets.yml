@@ -1,0 +1,44 @@
+name: Assemble pirate art assets
+
+on:
+  push:
+    branches: [art/pirate-assets-stage-v2]
+    paths:
+      - '.asset-staging/**'
+      - '.github/workflows/assemble-pirate-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Assemble byte-exact WebP assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p src/assets/pirate
+          assemble() {
+            name="$1"; expected="$2"
+            cat .asset-staging/${name}.part* | tr -d '\n\r' | base64 -d > "src/assets/pirate/${name}.webp"
+            actual=$(git hash-object "src/assets/pirate/${name}.webp")
+            echo "$name -> $actual"
+            test "$actual" = "$expected"
+          }
+          assemble tula ff3e4aac014a051c2e85987daa9ffcec0d9608fd
+          assemble coralox dc8c4a8d70663a773ba7fccc464befb8ab73ae0e
+          assemble nebulon e82d18803c341e51ec4447b1da4de753b8bf829b
+          assemble sturmkrab 8b658fdacebc8da2c81e8801df2599b3c44dfe39
+      - name: Commit assembled assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/assets/pirate/*.webp
+          git diff --cached --quiet && exit 0
+          git commit -m 'Assemble byte-verified pirate art assets'
+          git push origin HEAD:art/pirate-assets-stage-v2
