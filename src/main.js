@@ -22,12 +22,19 @@ function spriteMap() {
   return typeof HELPER_SPRITES === "undefined" ? {} : HELPER_SPRITES;
 }
 
+function spriteUrl(asset) {
+  if (typeof asset === "string") return asset;
+  if (asset && typeof asset === "object" && typeof asset.src === "string") return asset.src;
+  return null;
+}
+
 function helperById(state, id) {
   return state.helperRoster.find((helper) => helper.id === id) || null;
 }
 
 function spriteImage(helper, className = "helper-sprite") {
-  const src = helper ? spriteMap()[helper.id] : null;
+  const asset = helper ? spriteMap()[helper.id] : null;
+  const src = spriteUrl(asset);
   if (!src) return null;
   const img = document.createElement("img");
   img.src = src;
@@ -39,7 +46,8 @@ function spriteImage(helper, className = "helper-sprite") {
 }
 
 function replaceSvgWithSprite(container, helper, className) {
-  if (!container || !helper || !spriteMap()[helper.id]) return;
+  const asset = helper ? spriteMap()[helper.id] : null;
+  if (!container || !helper || !spriteUrl(asset)) return;
   container.querySelector("svg")?.remove();
   if (!container.querySelector(".helper-sprite")) {
     const img = spriteImage(helper, className);
