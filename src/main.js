@@ -18,12 +18,16 @@ import {
 import { HELPER_SPRITES } from "./game/helper-sprites.js";
 import { render } from "./game/ui.js";
 
+function spriteMap() {
+  return typeof HELPER_SPRITES === "undefined" ? {} : HELPER_SPRITES;
+}
+
 function helperById(state, id) {
   return state.helperRoster.find((helper) => helper.id === id) || null;
 }
 
 function spriteImage(helper, className = "helper-sprite") {
-  const src = helper ? HELPER_SPRITES[helper.id] : null;
+  const src = helper ? spriteMap()[helper.id] : null;
   if (!src) return null;
   const img = document.createElement("img");
   img.src = src;
@@ -35,7 +39,7 @@ function spriteImage(helper, className = "helper-sprite") {
 }
 
 function replaceSvgWithSprite(container, helper, className) {
-  if (!container || !helper || !HELPER_SPRITES[helper.id]) return;
+  if (!container || !helper || !spriteMap()[helper.id]) return;
   container.querySelector("svg")?.remove();
   if (!container.querySelector(".helper-sprite")) {
     const img = spriteImage(helper, className);
