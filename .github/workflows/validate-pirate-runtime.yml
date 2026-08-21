@@ -40,13 +40,14 @@ jobs:
       - name: Install Playwright Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
 
-      - name: Run existing mobile/desktop gameplay audit
+      - name: Run gameplay and pirate UI audit on one preview server
         shell: bash
         run: |
           set -euo pipefail
           npx astro preview --host 127.0.0.1 --port 4321 > /tmp/wordbound-preview.log 2>&1 &
           preview_pid=$!
-          trap 'kill $preview_pid || true' EXIT
+          cleanup() { kill "$preview_pid" 2>/dev/null || true; }
+          trap cleanup EXIT
           ok=0
           for attempt in $(seq 1 60); do
             code=$(curl -L -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/ || true)
@@ -54,7 +55,50 @@ jobs:
             sleep 1
           done
           if [ "$ok" != "1" ]; then cat /tmp/wordbound-preview.log; exit 1; fi
+
           WORDBOUND_PREVIEW_URL=http://127.0.0.1:4321/wordbound-battle/ npm run test:e2e
+
+          node --input-type=module <<'NODE'
+          import { chromium, webkit } from 'playwright';
+          const url='http://127.0.0.1:4321/wordbound-battle/';
+          for (const [name, launcher] of [['chromium', chromium], ['webkit', webkit]]) {
+            const browser=await launcher.launch({headless:true});
+            try {
+              const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+              const page=await context.newPage();
+              const errors=[];
+              const bad=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+              page.on('response',r=>{if(r.status()===404)bad.push(r.url())});
+              const response=await page.goto(url,{waitUntil:'networkidle'});
+              if (response?.status() !== 200) throw new Error(`${name}: preview HTTP ${response?.status()}`);
+              await page.waitForFunction(() => document.querySelector('.tula-portrait')?.dataset.pirateArtReady === 'true');
+              await page.waitForFunction(() => document.querySelector('.enemy-intro-avatar')?.dataset.pirateArtReady === 'true');
+              const intro=await page.evaluate(() => ({
+                tula: document.querySelector('.tula-portrait img.tula-pirate-sprite')?.naturalWidth || 0,
+                enemy: document.querySelector('.enemy-intro-avatar img.enemy-pirate-sprite')?.naturalWidth || 0,
+              }));
+              if (!intro.tula || !intro.enemy) throw new Error(`${name}: pirate intro art missing`);
+              await page.locator('[data-action="start"]').click();
+              await page.waitForFunction(() => document.querySelector('.tula-mini')?.dataset.pirateArtReady === 'true');
+              await page.waitForFunction(() => document.querySelector('.enemy-avatar-wrap')?.dataset.pirateArtReady === 'true');
+              const battle=await page.evaluate(() => ({
+                tula: document.querySelector('.tula-mini img.tula-pirate-sprite')?.naturalWidth || 0,
+                enemy: document.querySelector('.enemy-avatar-wrap img.enemy-pirate-sprite')?.naturalWidth || 0,
+                overflow: document.documentElement.scrollWidth > innerWidth + 1,
+              }));
+              if (!battle.tula || !battle.enemy) throw new Error(`${name}: pirate battle art missing`);
+              if (battle.overflow) throw new Error(`${name}: pirate art caused horizontal overflow`);
+              if (bad.length) throw new Error(`${name}: 404 responses: ${[...new Set(bad)].join(' | ')}`);
+              if (errors.length) throw new Error(`${name}: browser errors: ${errors.join(' | ')}`);
+              await page.screenshot({path:`audit-ci/pirate-${name}-390x844.png`,fullPage:false});
+              await context.close();
+            } finally {
+              await browser.close();
+            }
+          }
+          NODE
 
       - name: Verify all pirate AVIF assets decode in Chromium and WebKit
         shell: bash
@@ -96,81 +140,46 @@ jobs:
           }
           NODE
 
-      - name: Verify pirate art is mounted in intro and battle UI
-        shell: bash
-        run: |
-          set -euo pipefail
-          npx astro preview --host 127.0.0.1 --port 4322 > /tmp/wordbound-pirate-preview.log 2>&1 &
-          preview_pid=$!
-          trap 'kill $preview_pid || true' EXIT
-          ok=0
-          for attempt in $(seq 1 60); do
-            code=$(curl -L -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:4322/wordbound-battle/ || true)
-            if [ "$code" = "200" ]; then ok=1; break; fi
-            sleep 1
-          done
-          test "$ok" = "1"
-          node --input-type=module <<'NODE'
-          import { chromium, webkit } from 'playwright';
-          const url='http://127.0.0.1:4322/wordbound-battle/';
-          for (const [name, launcher] of [['chromium', chromium], ['webkit', webkit]]) {
-            const browser=await launcher.launch({headless:true});
-            try {
-              const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-              const page=await context.newPage();
-              const errors=[];
-              page.on('pageerror',e=>errors.push(String(e)));
-              page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-              await page.goto(url,{waitUntil:'networkidle'});
-              await page.waitForFunction(() => document.querySelector('.tula-portrait')?.dataset.pirateArtReady === 'true');
-              await page.waitForFunction(() => document.querySelector('.enemy-intro-avatar')?.dataset.pirateArtReady === 'true');
-              const intro=await page.evaluate(() => ({
-                tula: document.querySelector('.tula-portrait img.tula-pirate-sprite')?.naturalWidth || 0,
-                enemy: document.querySelector('.enemy-intro-avatar img.enemy-pirate-sprite')?.naturalWidth || 0,
-              }));
-              if (!intro.tula || !intro.enemy) throw new Error(`${name}: pirate intro art missing`);
-              await page.locator('[data-action="start"]').click();
-              await page.waitForFunction(() => document.querySelector('.tula-mini')?.dataset.pirateArtReady === 'true');
-              await page.waitForFunction(() => document.querySelector('.enemy-avatar-wrap')?.dataset.pirateArtReady === 'true');
-              const battle=await page.evaluate(() => ({
-                tula: document.querySelector('.tula-mini img.tula-pirate-sprite')?.naturalWidth || 0,
-                enemy: document.querySelector('.enemy-avatar-wrap img.enemy-pirate-sprite')?.naturalWidth || 0,
-                overflow: document.documentElement.scrollWidth > innerWidth + 1,
-              }));
-              if (!battle.tula || !battle.enemy) throw new Error(`${name}: pirate battle art missing`);
-              if (battle.overflow) throw new Error(`${name}: pirate art caused horizontal overflow`);
-              if (errors.length) throw new Error(`${name}: browser errors: ${errors.join(' | ')}`);
-              await page.screenshot({path:`audit-ci/pirate-${name}-390x844.png`,fullPage:false});
-              await context.close();
-            } finally {
-              await browser.close();
-            }
-          }
-          NODE
-
       - name: Smoke-test standalone pirate art
         shell: bash
         run: |
           set -euo pipefail
           python3 -m http.server 8765 > /tmp/standalone.log 2>&1 &
           standalone_pid=$!
-          trap 'kill $standalone_pid || true' EXIT
+          cleanup() { kill "$standalone_pid" 2>/dev/null || true; }
+          trap cleanup EXIT
+          ok=0
           for attempt in $(seq 1 30); do
             code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototype.html || true)
-            [ "$code" = "200" ] && break
+            if [ "$code" = "200" ]; then ok=1; break; fi
             sleep 1
           done
+          if [ "$ok" != "1" ]; then cat /tmp/standalone.log; exit 1; fi
           node --input-type=module <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           try {
-            const page=await browser.newPage({viewport:{width:390,height:844}});
+            const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+            const page=await context.newPage();
             const errors=[];
+            const bad=[];
             page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto('http://127.0.0.1:8765/prototype.html',{waitUntil:'networkidle'});
+            page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+            page.on('response',r=>{if(r.status()===404)bad.push(r.url())});
+            const response=await page.goto('http://127.0.0.1:8765/prototype.html',{waitUntil:'networkidle'});
+            if (response?.status() !== 200) throw new Error(`Standalone HTTP ${response?.status()}`);
             await page.waitForFunction(() => document.querySelector('.tula-portrait')?.dataset.pirateArtReady === 'true');
             await page.waitForFunction(() => document.querySelector('.enemy-intro-avatar')?.dataset.pirateArtReady === 'true');
-            if (errors.length) throw new Error(errors.join(' | '));
+            const art=await page.evaluate(() => ({
+              tula: document.querySelector('.tula-portrait img.tula-pirate-sprite')?.naturalWidth || 0,
+              enemy: document.querySelector('.enemy-intro-avatar img.enemy-pirate-sprite')?.naturalWidth || 0,
+              overflow: document.documentElement.scrollWidth > innerWidth + 1,
+            }));
+            if (!art.tula || !art.enemy) throw new Error('Standalone pirate art missing');
+            if (art.overflow) throw new Error('Standalone horizontal overflow');
+            if (bad.length) throw new Error(`Standalone 404s: ${[...new Set(bad)].join(' | ')}`);
+            if (errors.length) throw new Error(`Standalone errors: ${errors.join(' | ')}`);
+            await context.close();
           } finally { await browser.close(); }
           NODE
 
