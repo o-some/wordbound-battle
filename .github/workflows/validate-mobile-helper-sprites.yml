@@ -1,0 +1,79 @@
+name: Validate mobile helper sprites
+
+on:
+  push:
+    branches: [mobile-helper-sprites-v3]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run engine tests
+        run: npm test
+
+      - name: Build Astro site
+        run: npm run build:astro
+
+      - name: Generate standalone fallback
+        run: npm run standalone
+
+      - name: Run structure audit
+        run: npm run audit:structure
+
+      - name: Install Playwright Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run Chromium mobile/desktop gameplay audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx astro preview --host 127.0.0.1 --port 4321 > /tmp/wordbound-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill $preview_pid || true' EXIT
+          ok=0
+          for attempt in $(seq 1 60); do
+            code=$(curl -L -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/ || true)
+            if [ "$code" = "200" ]; then ok=1; break; fi
+            sleep 1
+          done
+          if [ "$ok" != "1" ]; then cat /tmp/wordbound-preview.log; exit 1; fi
+          WORDBOUND_PREVIEW_URL=http://127.0.0.1:4321/wordbound-battle/ npm run test:e2e
+
+      - name: Verify helper sprite assets are emitted
+        shell: bash
+        run: |
+          set -euo pipefail
+          count=$(find dist-astro -type f -iname '*.webp' | wc -l)
+          echo "WebP assets emitted: $count"
+          test "$count" -ge 4
+
+      - name: Verify built page and static assets locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -L -sS -o /tmp/page.html -w '%{http_code}' http://127.0.0.1:4321/wordbound-battle/)
+          test "$code" = "200"
+          grep -qi 'Wordbound Battle' /tmp/page.html
+
+      - name: Upload browser audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordbound-mobile-helper-audit
+          path: audit-ci/*.png
+          if-no-files-found: warn
