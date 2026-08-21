@@ -15,6 +15,9 @@ Der Spieler wählt pro Runde einen Gehilfen, berücksichtigt die aktuelle Gegner
 ## Aktueller Funktionsstand
 
 - Gehilfenwahl pro Runde: Meli, Neri, Skippi, Fino
+- byte-verifizierte lokale WebP-Sprites für alle vier Gehilfen
+- Gehilfen-Sprites in Teamkarten, Auswahl und aktivem Kampfbereich
+- mobile 3-Schritt-Kampfführung: Gehilfe wählen → Aufgabe lösen → Gegnerzug
 - Energie + Regeneration auf der Bank
 - wechselnde Gegner-Schwächen
 - getrennte Spieler- und Gegnerzüge
@@ -80,9 +83,13 @@ Vite-Ausgabe: `dist/`
 
 ## Release-Gate
 
-Letzte vollständig getestete Game-Code-SHA:
+Letzte vollständig getestete und live verifizierte Game-Code-SHA:
 
-`06f731d0b9bac32d86fae074b0f169cb848fe4e1`
+`e3f5f16782ed2fa2769b6ffefd79af5cbb225133`
+
+Live-Verifikationsrecord:
+
+`0067189a19e047c00f62c5d4634e9a9ed7fb6a24`
 
 Dazu erfolgreich geprüft:
 - 19/19 Engine Tests
@@ -91,6 +98,9 @@ Dazu erfolgreich geprüft:
 - iPhone-/Android-nahe Chromium-Viewports
 - Desktop Chromium 1280×850
 - vollständiger Browser-Gameplay-Flow inkl. Satzbau, Sieg, nächster Gegner, Niederlage und Neustart
+- byte-verifizierte WebP-Sprites für Meli, Neri, Skippi und Fino
+- kein horizontaler Overflow
+- keine Überlagerung zwischen aktivem Gehilfen und Tula-Guide
 - keine Browser-JavaScript-/Page-Errors
 - keine 404-Responses
 - GitHub Pages Deploy
@@ -98,7 +108,8 @@ Dazu erfolgreich geprüft:
 - gleiche-Origin-Assets ohne 404
 
 Maschinenlesbarer Live-Status: `docs/LIVE_STATUS.json`  
-Vollständige Checkliste: `docs/TEST_CHECKLIST.md`
+Vollständige Checkliste: `docs/TEST_CHECKLIST.md`  
+Asset-Dokumentation: `docs/ASSET_MANIFEST.md`
 
 ## Host-Integration
 
