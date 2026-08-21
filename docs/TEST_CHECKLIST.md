@@ -15,8 +15,29 @@ Aktueller Release-Stand 21.08.2026. Es sind nur tatsächlich ausgeführte Prüfu
 - [x] alle vier WebP-Dateien byte-verifiziert
 - [x] Sprite-Nutzung in Teamkarten, Auswahl und aktivem Kampfbereich geprüft
 - [x] mobile 3-Schritt-Kampfführung geprüft
-- [x] temporärer isolierter Validierungsworkflow nach erfolgreichem Gate entfernt
-- [x] finaler PR-Diff auf umsetzungsrelevante Wordbound-Dateien begrenzt
+
+## Pirate-Art-Release
+- [x] Rollback vor Pirate-Art: `pre-pirate-art-refresh-20260821`
+- [x] Rollback vor Runtime-Integration: `pre-pirate-runtime-integration-20260821`
+- [x] Asset-Stufe separat über PR #2 gemerged
+- [x] Runtime-Integration separat über PR #3 vorbereitet
+- [x] Pirate-Tula in Intro, Guide und Warteposition verdrahtet
+- [x] Coralox Pirate-Boss im Intro und Kampf verdrahtet
+- [x] Nebulon Geister-Pirat im Asset-Mapping vorhanden und dekodiert
+- [x] Sturmkrab Gewitter-Pirat im Asset-Mapping vorhanden und dekodiert
+- [x] Gegner-Fähigkeiten / HP / Schwächen / Schaden gegenüber V2.2 unverändert
+- [x] neue Grafiken ersetzen alte Grafiken erst nach erfolgreichem Bild-Load
+- [x] SVG-/Tula-Fallback bleibt bei Bildfehler erhalten
+- [x] Standalone-Generator um Pirate-Art ergänzt
+- [x] alle vier AVIF-Assets in Chromium dekodiert – 192×192
+- [x] alle vier AVIF-Assets in WebKit dekodiert – 192×192
+- [x] Pirate-Art im Intro in Chromium geprüft
+- [x] Pirate-Art im Intro in WebKit geprüft
+- [x] Pirate-Art in der Battle Stage in Chromium geprüft
+- [x] Pirate-Art in der Battle Stage in WebKit geprüft
+- [x] Pirate-Mobile-Screenshots visuell geprüft
+- [x] temporärer Pirate-Validierungsworkflow nach erfolgreichem Gate entfernt
+- [x] finaler Runtime-PR-Diff nur auf `src/main.js` und `scripts/make-standalone.mjs` begrenzt
 
 ## Build / CI – Ziel-Repo
 - [x] npm install / Dependency-Resolution PASS
@@ -24,8 +45,8 @@ Aktueller Release-Stand 21.08.2026. Es sind nur tatsächlich ausgeführte Prüfu
 - [x] `npm run build:astro` PASS
 - [x] Standalone-Fallback PASS
 - [x] Struktur-Audit PASS
-- [x] GitHub Actions Release-Gate PASS
-- [x] WebP-Assets im Astro-Build emittiert
+- [x] isolierter Pirate-Runtime-Release-Gate PASS
+- [x] normaler GitHub-Pages-Produktions-Gate PASS
 - [x] Pages-Artifact erfolgreich erstellt
 - [x] GitHub Pages Source auf **GitHub Actions** gesetzt
 
@@ -37,8 +58,9 @@ Aktueller Release-Stand 21.08.2026. Es sind nur tatsächlich ausgeführte Prüfu
 - [x] keine 404-Responses im Browser-E2E
 - [x] gleiche-Origin-Assets auf 404 geprüft – PASS
 - [x] Astro Base `/wordbound-battle` im Build/Live-Gate bestätigt
-- [x] Produktionsdeployment für Game-Code-SHA `e3f5f16782ed2fa2769b6ffefd79af5cbb225133` PASS
+- [x] Produktionsdeployment für Pirate-Runtime-Game-Code-SHA `c7eac9c7ec94b4420fc4961b6fa006736a982e4b` PASS
 - [x] maschinenlesbarer Live-Status durch GitHub Actions aktualisiert
+- [x] Live-Verifikationsrecord-Commit: `49a62d9242956ab2223927db8c215f89cd861ab1`
 
 ## Gameplay – Engine + Browser-E2E
 - [x] Kampf startet
@@ -72,6 +94,7 @@ Aktueller Release-Stand 21.08.2026. Es sind nur tatsächlich ausgeführte Prüfu
 - [x] keine Überlagerung Aktiver Gehilfe / Tula-Dialog
 - [x] kein horizontaler Overflow
 - [x] Browser-Screenshots als CI-Artefakt erzeugt
+- [x] Pirate-Art-Screenshots in Chromium und WebKit erzeugt
 - [x] finale Screenshots visuell geprüft
 
 Hinweis: WebKit + 390×844 ist ein automatisierter iPhone-naher Browser-Test. Ein physisches iPhone wird aus dieser Session nicht ferngesteuert.
@@ -82,18 +105,17 @@ Hinweis: WebKit + 390×844 ist ein automatisierter iPhone-naher Browser-Test. Ei
 - [x] Source-Referenz-SHA dokumentiert: `892f676fbcef77ab49373aef7865d60afba0ebb7`
 - [x] Source-Rollback `pre-extraction-wordbound-battle`
 - [x] Target-Rollback `pre-migration-wordbound-v2-2`
-- [x] zusätzlicher Rollback vor Helper-Sprite-Release: `pre-mobile-helper-sprites-20260821`
+- [x] Rollback vor Helper-Sprite-Release: `pre-mobile-helper-sprites-20260821`
+- [x] Rollback vor Pirate-Art-Release: `pre-pirate-art-refresh-20260821`
+- [x] Rollback vor Pirate-Runtime-Integration: `pre-pirate-runtime-integration-20260821`
 - [x] erster vollständiger Target-Migrationscommit dokumentiert: `9d9b9e9aa64a944b32d71ea959b676b799c250ce`
-- [x] aktuelle vollständig getestete und live verifizierte Game-Code-SHA: `e3f5f16782ed2fa2769b6ffefd79af5cbb225133`
-- [x] erfolgreicher Live-Verifikationsrecord: `0067189a19e047c00f62c5d4634e9a9ed7fb6a24`
+- [x] aktuelle vollständig getestete und live verifizierte Game-Code-SHA: `c7eac9c7ec94b4420fc4961b6fa006736a982e4b`
+- [x] erfolgreicher Live-Verifikationsrecord: `49a62d9242956ab2223927db8c215f89cd861ab1`
 - [x] README / HANDOFF / MIGRATION_RECORD / ASSET_MANIFEST / TEST_CHECKLIST vorhanden
-- [x] Source main nach dem Ziel-Gate erneut gelesen
-- [x] aktueller Source-Recheck: `cf2fb9b3e2dc1eb885d50e88593124def1cbbdc0`
-- [x] Suche nach `wordbound` / `Wordbound Battle` im Source erneut ohne Treffer
 - [x] keine andere Spiele-Repo verändert
-- [x] Alt-Kopie-Entscheidung dokumentiert
+- [x] Alt-Kopie-Entscheidung unverändert dokumentiert
 
 ## Source Cleanup
 `REMOVE_OLD_COPY = NOT_APPLICABLE`
 
-Am dokumentierten Source-Referenzstand und beim erneuten aktuellen Source-Check existiert keine eigenständige Wordbound-Battle-Kopie in `tulasisland`. Deshalb wurde dort **nichts gelöscht**.
+Am dokumentierten Source-Referenzstand und beim erneuten Source-Check existiert keine eigenständige Wordbound-Battle-Kopie in `tulasisland`. Deshalb wurde dort **nichts gelöscht**.
